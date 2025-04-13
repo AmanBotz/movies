@@ -48,6 +48,12 @@ class Database:
         self.req = mydb.requests
 
     # --- User and Group Helpers ---
+    # --- Settings Helpers ---
+    async def get_settings(self, id):
+        chat = await self.grp.find_one({'id': int(id)})
+        if chat:
+            return chat.get('settings', self.default)
+        return self.default
 
     def new_user(self, id, name):
         return {
