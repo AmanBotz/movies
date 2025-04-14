@@ -50,8 +50,8 @@ SHORTENER_API2 = environ.get("SHORTENER_API2", "5fdcd22b1afd3c6a1ff0044678cbb820
 SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "modijiurl.com")
 SHORTENER_API3 = environ.get("SHORTENER_API3", "5fdcd22b1afd3c6a1ff0044678cbb820f5bf700a")
 SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "modijiurl.com")
-TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', None))
-THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', None))
+TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "60"))
+THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "60"))
 # In info.py add:
 FIRST_VERIFICATION_EXPIRY = int(environ.get("FIRST_VERIFICATION_EXPIRY", "60"))    # 1 hour (default)
 SECOND_VERIFICATION_EXPIRY = int(environ.get("SECOND_VERIFICATION_EXPIRY", "60"))  # 2 hours (default)
