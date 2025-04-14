@@ -50,8 +50,8 @@ SHORTENER_API2 = environ.get("SHORTENER_API2", "5fdcd22b1afd3c6a1ff0044678cbb820
 SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "modijiurl.com")
 SHORTENER_API3 = environ.get("SHORTENER_API3", "5fdcd22b1afd3c6a1ff0044678cbb820f5bf700a")
 SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "modijiurl.com")
-TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "60"))
-THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "60"))
+TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "3600"))
+THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "18660"))
 
 # languages search
 LANGUAGES = ["hindi", "english", "telugu", "tamil", "kannada", "malayalam"]
@@ -73,4 +73,4 @@ LONG_IMDB_DESCRIPTION = is_enabled('LONG_IMDB_DESCRIPTION', False)
 PROTECT_CONTENT = is_enabled('PROTECT_CONTENT', False)
 SPELL_CHECK = is_enabled('SPELL_CHECK', True)
 LINK_MODE = is_enabled('LINK_MODE', False)
-PM_SEARCH = is_enabled('PM_SEARCH', False)
+PM_SEARCH = is_enabled('PM_SEARCH', True)
