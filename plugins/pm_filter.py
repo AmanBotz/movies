@@ -584,7 +584,7 @@ async def auto_filter(client, msg, spoll=False):
         f"**Query:** `{msg.text}`\n"
         "Please check the spelling or try a different search term."
     )
-            await client.send_message(LOG_CHANNEL, text=log_text, parse_mode=enums.ParseMode.MARKDOWN)
+        await client.send_message(LOG_CHANNEL, text=log_text, parse_mode=enums.ParseMode.MARKDOWN)
             if settings["spell_check"]:
                 return await advantage_spell_chok(msg)
             return
