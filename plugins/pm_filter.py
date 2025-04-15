@@ -308,14 +308,34 @@ async def advantage_spoll_choker(bot, query):
     _, id, user = query.data.split('#')
     if int(user) != 0 and query.from_user.id != int(user):
         return await query.answer(script.ALRT_TXT, show_alert=True)
+    
+    # Get original query from user's message
+    original_query = query.message.reply_to_message.text  # Original user input
+    
     movie = await get_poster(id, id=True)
-    search = movie.get('title')
-    await query.answer('ᴄʜᴇᴄᴋɪɴɢ ɪɴ ᴍʏ ᴅᴀᴛᴀʙᴀꜱᴇ 🌚')
-    files, offset, total_results = await get_search_results(search)
+    corrected_query = movie.get('title')  # Spell-corrected query
+    
+    await query.answer('Checking in my database...')
+    files, offset, total_results = await get_search_results(corrected_query)
+    
     if files:
-        k = (search, files, offset, total_results)
+        k = (corrected_query, files, offset, total_results)
         await auto_filter(bot, query, k)
     else:
+        # Log ORIGINAL query to BIN_CHANNEL
+        log_text = (
+            "❗️ **No Results After Spell Check**\n\n"
+            f"**User:** {query.from_user.mention} (ID: `{query.from_user.id}`)\n"
+            f"**Original Query:** `{original_query}`\n"
+            f"**Corrected Query:** `{corrected_query}`\n"
+            "**Status:** Still no results found."
+        )
+        await bot.send_message(
+            BIN_CHANNEL, 
+            text=log_text,
+            parse_mode=enums.ParseMode.MARKDOWN
+        )
+        
         k = await query.message.edit(script.NO_RESULT_TXT)
         await asyncio.sleep(60)
         await k.delete()
@@ -578,16 +598,6 @@ async def auto_filter(client, msg, spoll=False):
         settings = await get_settings(chat_id)
         files, offset, total_results = await get_search_results(search)
         if not files:
-            # Prepare a formatted log message for when no results are found.
-            log_text = (
-                "❗️ *No Result Found*\n\n"
-                f"**User:** {message.from_user.mention} (ID: {message.from_user.id})\n"
-                f"**Query:** `{message.text}`\n"
-                "Please check the spelling or try a different search term."
-            )
-            # Send the log message to your log channel.
-            await client.send_message(BIN_CHANNEL, text=log_text, parse_mode=enums.ParseMode.MARKDOWN)
-            
             if settings["spell_check"]:
                 return await advantage_spell_chok(message)
             return
