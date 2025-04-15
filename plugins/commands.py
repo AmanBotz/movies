@@ -200,7 +200,7 @@ async def start(client:Client, message):
                 reply_markup=InlineKeyboardMarkup(btn)
             )
             all_files.append(dlt)
-        await asyncio.sleep(600)
+        await asyncio.sleep(60)
         for dlt_file in all_files:
             await dlt_file.delete()
         t=await client.send_message(message.from_user.id, "<b>⚠️ 𝖸𝗈𝗎𝗋 𝖱𝖾𝗊𝗎𝖾𝗌𝗍𝖾𝖽 𝖥𝗂𝗅𝖾 𝖨𝗌 𝖣𝖾𝗅𝖾𝗍𝖾𝖽 𝖳𝗈 𝖠𝗏𝗈𝗂𝖽 𝖢𝗈𝗉𝗒𝗋𝗂𝗀𝗁𝗍 𝖨𝗇 𝖡𝗈𝗍, 𝖨𝖿 𝖸𝗈𝗎 𝖶𝖺𝗇𝗍 𝖠𝗀𝖺𝗂𝗇 𝖳𝗁𝖾𝗇 𝖲𝖾𝖺𝗋𝖼𝗁 𝖠𝗀𝖺𝗂𝗇 ☺️</b>")
@@ -253,7 +253,7 @@ async def start(client:Client, message):
         protect_content=settings['file_secure'],
         reply_markup=InlineKeyboardMarkup(btn)
     )
-    await asyncio.sleep(600)
+    await asyncio.sleep(60)
     await d.delete()
     r = await message.reply_text("<b>⚠️ 𝖸𝗈𝗎𝗋 𝖱𝖾𝗊𝗎𝖾𝗌𝗍𝖾𝖽 𝖥𝗂𝗅𝖾 𝖨𝗌 𝖣𝖾𝗅𝖾𝗍𝖾𝖽 𝖳𝗈 𝖠𝗏𝗈𝗂𝖽 𝖢𝗈𝗉𝗒𝗋𝗂𝗀𝗁𝗍 𝖨𝗇 𝖡𝗈𝗍, 𝖨𝖿 𝖸𝗈𝗎 𝖶𝖺𝗇𝗍 𝖠𝗀𝖺𝗂𝗇 𝖳𝗁𝖾𝗇 𝖲𝖾𝖺𝗋𝖼𝗁 𝖠𝗀𝖺𝗂𝗇 ☺️</b>")
     await asyncio.sleep(120)
