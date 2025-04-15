@@ -578,7 +578,14 @@ async def auto_filter(client, msg, spoll=False):
         settings = await get_settings(chat_id)
         files, offset, total_results = await get_search_results(search)
         if not files:
-            if settings["spell_check"]:
+    log_text = (
+        "❗️ *No Result Found*\n\n"
+        f"**User:** {msg.from_user.mention} (ID: {msg.from_user.id})\n"
+        f"**Query:** `{msg.text}`\n"
+        "Please check the spelling or try a different search term."
+    )
+        await client.send_message(LOG_CHANNEL, text=log_text, parse_mode=enums.ParseMode.MARKDOWN)
+        if settings["spell_check"]:
                 return await advantage_spell_chok(msg)
             return
     else:
