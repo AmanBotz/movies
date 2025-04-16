@@ -14,18 +14,19 @@ from database.users_chats_db import db
 from database.ia_filterdb import Media, get_search_results, get_bad_files, get_file_details
 
 lock = asyncio.Lock()
-
 logger = logging.getLogger(__name__)
 
 BUTTONS = {}
 FILES_ID = {}
 CAP = {}
 
+# Global dictionary to track spell correction selection status.
+spell_selection_record = {}
 
 @Client.on_message(filters.private & filters.text & filters.incoming)
 async def pm_search(client, message):
     if PM_SEARCH:
-        await auto_filter(client, message)  
+        await auto_filter(client, message)
     else:
         await message.reply_text("⚠️ ꜱᴏʀʀʏ ɪ ᴄᴀɴ'ᴛ ᴡᴏʀᴋ ɪɴ ᴘᴍ")
     
@@ -33,7 +34,7 @@ async def pm_search(client, message):
 async def group_search(client, message):
     chat_id = message.chat.id
     settings = await get_settings(chat_id)
-    if settings["auto_filter"]:  
+    if settings["auto_filter"]:
         if 'hindi' in message.text.lower() or 'tamil' in message.text.lower() or 'telugu' in message.text.lower() or 'malayalam' in message.text.lower() or 'kannada' in message.text.lower() or 'english' in message.text.lower() or 'gujarati' in message.text.lower(): 
             return await auto_filter(client, message)
 
@@ -70,9 +71,9 @@ async def group_search(client, message):
             await message.reply_text('<code>Report sent</code>' + ''.join(hidden_mentions))
             return
         else:
-            await auto_filter(client, message)   
+            await auto_filter(client, message)
     else:
-        k=await message.reply_text('<b>⚠️ ᴀᴜᴛᴏ ғɪʟᴛᴇʀ ᴍᴏᴅᴇ ɪꜱ ᴏғғ...</b>')
+        k = await message.reply_text('<b>⚠️ ᴀᴜᴛᴏ ғɪʟᴛᴇʀ ᴍᴏᴅᴇ ɪꜱ ᴏғғ...</b>')
         await asyncio.sleep(10)
         await k.delete()
         try:
@@ -92,7 +93,7 @@ async def next_page(bot, query):
     search = BUTTONS.get(key)
     cap = CAP.get(key)
     if not search:
-        await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name),show_alert=True)
+        await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name), show_alert=True)
         return
     files, n_offset, total = await get_search_results(search, offset=offset)
     try:
@@ -122,14 +123,11 @@ async def next_page(bot, query):
             InlineKeyboardButton("♻️ sᴇɴᴅ ᴀʟʟ", callback_data=f"send_all#{key}"),
             InlineKeyboardButton("📰 ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}#{req}#{offset}")
         ])
-
-
     else:
         btn.insert(0,[
             InlineKeyboardButton("♻️ sᴇɴᴅ ᴀʟʟ", callback_data=f"send_all#{key}"),
             InlineKeyboardButton("📰 ʟᴀɴɢᴜᴀɢᴇs", callback_data=f"languages#{key}#{req}#{offset}")
         ])
-
     if 0 < offset <= int(MAX_BTN):
         off_set = 0
     elif offset == 0:
@@ -137,7 +135,6 @@ async def next_page(bot, query):
     else:
         off_set = offset - int(MAX_BTN)
     if n_offset == 0:
-
         btn.append(
             [InlineKeyboardButton("⪻ ʙᴀᴄᴋ", callback_data=f"next_{req}_{key}_{off_set}"),
              InlineKeyboardButton(f"ᴘᴀɢᴇ {math.ceil(int(offset) / int(MAX_BTN)) + 1} / {math.ceil(total / int(MAX_BTN))}", callback_data="pages")]
@@ -145,7 +142,8 @@ async def next_page(bot, query):
     elif off_set is None:
         btn.append(
             [InlineKeyboardButton(f"{math.ceil(int(offset) / int(MAX_BTN)) + 1} / {math.ceil(total / int(MAX_BTN))}", callback_data="pages"),
-             InlineKeyboardButton("ɴᴇxᴛ ⪼", callback_data=f"next_{req}_{key}_{n_offset}")])
+             InlineKeyboardButton("ɴᴇxᴛ ⪼", callback_data=f"next_{req}_{key}_{n_offset}")]
+        )
     else:
         btn.append(
             [
@@ -179,7 +177,7 @@ async def languages_cb_handler(client: Client, query: CallbackQuery):
         for lang in LANGUAGES
     ]
     btn.append([InlineKeyboardButton(text="⪻ ʙᴀᴄᴋ ᴛᴏ ᴍᴀɪɴ ᴘᴀɢᴇ", callback_data=f"next_{req}_{key}_{offset}")])
-    d=await query.message.edit_text("<b>ɪɴ ᴡʜɪᴄʜ ʟᴀɴɢᴜᴀɢᴇ ʏᴏᴜ ᴡᴀɴᴛ, ᴄʜᴏᴏsᴇ ʜᴇʀᴇ 👇</b>", reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=True)
+    d = await query.message.edit_text("<b>ɪɴ ᴡʜɪᴄʜ ʟᴀɴɢᴜᴀɢᴇ ʏᴏᴜ ᴡᴀɴᴛ, ᴄʜᴏᴏsᴇ ʜᴇʀᴇ 👇</b>", reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=True)
     await asyncio.sleep(600)
     await d.delete()
 
@@ -192,7 +190,7 @@ async def lang_search(client: Client, query: CallbackQuery):
     search = BUTTONS.get(key)
     cap = CAP.get(key)
     if not search:
-        await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name),show_alert=True)
+        await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name), show_alert=True)
         return 
     search = search.replace("_", " ")
     files, n_offset, total_results = await get_search_results(search, lang=lang)
@@ -322,7 +320,7 @@ async def advantage_spoll_choker(bot, query):
         k = (corrected_query, files, offset, total_results)
         await auto_filter(bot, query, k)
     else:
-        # Log ORIGINAL query to BIN_CHANNEL
+        # Log ORIGINAL query to BIN_CHANNEL since no results even after correction
         log_text = (
             "❗️ **No Results After Spell Check**\n\n"
             f"**User:** {query.from_user.mention} (ID: `{query.from_user.id}`)\n"
@@ -393,7 +391,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data.startswith("stream"):
         user_id = query.from_user.id
         if not await db.has_premium_access(user_id):
-            d=await query.message.reply("<b>💔 ᴛʜɪꜱ ꜰᴇᴀᴛᴜʀᴇ ɪꜱ ᴏɴʟʏ ꜰᴏʀ ʙᴏᴛ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀꜱ.\n\nɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ʙᴏᴛ ꜱᴜʙꜱᴄʀɪᴘᴛɪᴏɴ ᴛʜᴇɴ ꜱᴇɴᴅ /plan</b>")
+            d = await query.message.reply("<b>💔 ᴛʜɪꜱ ꜰᴇᴀᴛᴜʀᴇ ɪꜱ ᴏɴʟʏ ꜰᴏʀ ʙᴏᴛ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀꜱ.\n\nɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ʙᴏᴛ ꜱᴜʙꜱᴄʀɪᴘᴛɪᴏɴ ᴛʜᴇɴ ꜱᴇɴᴅ /plan</b>")
             await asyncio.sleep(120)
             await d.delete()
             return
@@ -403,7 +401,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             file_id=file_id)
         online = f"https://{URL}/watch/{NOBITA.id}?hash={get_hash(NOBITA)}"
         download = f"https://{URL}/{NOBITA.id}?hash={get_hash(NOBITA)}"
-        btn= [[
+        btn = [[
             InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ", url=online),
             InlineKeyboardButton("ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ", url=download)
         ],[
@@ -586,9 +584,47 @@ async def cb_handler(client: Client, query: CallbackQuery):
             return await query.answer(f"Hello {query.from_user.first_name},\nDon't Click Other Results!", show_alert=True)
         files = temp.FILES_ID.get(key)
         if not files:
-            await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name),show_alert=True)
+            await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name), show_alert=True)
             return        
         await query.answer(url=f"https://t.me/{temp.U_NAME}?start=allfiles_{query.message.chat.id}_{key}")
+
+# --- New Callback for handling close on spell-check suggestions ---
+@Client.on_callback_query(filters.regex(r"^close_spell$"))
+async def close_spell_handler(client: Client, query: CallbackQuery):
+    """
+    This handler is triggered when the user taps the close button
+    on the spell-check suggestion message.
+    It logs the event to BIN_CHANNEL and deletes the suggestion message.
+    """
+    msg_id = query.message.message_id
+    # Mark that a selection was made
+    if msg_id in spell_selection_record:
+        spell_selection_record[msg_id]['selected'] = True
+
+    original_query = spell_selection_record.get(msg_id, {}).get('original_query', "Unknown")
+    offered = spell_selection_record.get(msg_id, {}).get('offered', "Not available")
+
+    log_text = (
+        "❗️ **Spell Check Closed by User**\n\n"
+        f"**User:** {query.from_user.mention} (ID: `{query.from_user.id}`)\n"
+        f"**Original Query:** `{original_query}`\n"
+        f"**Offered Corrections:** {offered}\n"
+        "**Status:** User closed the suggestions."
+    )
+    await client.send_message(
+        BIN_CHANNEL,
+        text=log_text,
+        parse_mode=enums.ParseMode.MARKDOWN
+    )
+    await query.answer("Suggestions closed.")
+    await query.message.delete()
+    try:
+        await query.message.reply_to_message.delete()
+    except Exception:
+        pass
+    spell_selection_record.pop(msg_id, None)
+
+# --- Updated auto_filter and advantage_spell_chok functions ---
 
 async def auto_filter(client, msg, spoll=False):
     if not spoll:
@@ -668,11 +704,6 @@ async def auto_filter(client, msg, spoll=False):
                     InlineKeyboardButton("♻️ sᴇɴᴅ ᴀʟʟ", callback_data=f"send_all#{key}")
                 ])
                          
-    if spoll:
-        m = await msg.message.edit(f"<b><code>{search}</code> ɪs ꜰᴏᴜɴᴅ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ ꜰᴏʀ ꜰɪʟᴇs 📫</b>")
-        await asyncio.sleep(1.2)
-        await m.delete()
-
     if offset != "":
         BUTTONS[key] = search
         req = message.from_user.id if message.from_user else 0
@@ -771,7 +802,7 @@ async def auto_filter(client, msg, spoll=False):
             await message.delete()
             await d.delete()
         else:
-            k=await message.reply_text(text=cap + links + del_msg, disable_web_page_preview=True, parse_mode=enums.ParseMode.HTML, reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=message.id)
+            k = await message.reply_text(text=cap + links + del_msg, disable_web_page_preview=True, parse_mode=enums.ParseMode.HTML, reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=message.id)
             if settings['auto_delete']:
                 await asyncio.sleep(DELETE_TIME)
                 await k.delete()
@@ -783,21 +814,21 @@ async def auto_filter(client, msg, spoll=False):
 async def advantage_spell_chok(message):
     """
     This function handles spell checking when no file results are found.
-    If movie suggestions are found but the user does not click one within
-    the timeout period, it logs the event to BIN_CHANNEL.
+    It offers movie suggestions as inline buttons. If suggestions are available
+    but the user does not click any option or selects the close button, the event
+    is logged to BIN_CHANNEL.
     """
-    # Save the original query
     original_query = message.text  
     chat_id = message.chat.id
     settings = await get_settings(chat_id)
     
-    # Remove unwanted words/phrases from the query and append 'movie'
+    # Remove unwanted words/phrases and add "movie" keyword.
     filtered_query = re.sub(
         r"\b(pl(i|e)*?(s|z+|ease|se|ese|(e+)s(e)?)|((send|snd|giv(e)?|gib)(\sme)?)|movie(s)?|new|latest|br((o|u)h?)*|^h(e|a)?(l)*(o)*|mal(ayalam)?|t(h)?amil|file|that|find|und(o)*|kit(t(i|y)?)?o(w)?|thar(u)?(o)*w?|kittum(o)*|aya(k)*(um(o)*)?|full\smovie|any(one)|with\ssubtitle(s)?)",
-        "", message.text, flags=re.IGNORECASE)
+        "", message.text, flags=re.IGNORECASE
+    )
     filtered_query = filtered_query.strip() + " movie"
     
-    # Try to retrieve bulk movie suggestions
     try:
         movies = await get_poster(message.text, bulk=True)
     except Exception as e:
@@ -810,7 +841,6 @@ async def advantage_spell_chok(message):
             pass
         return
 
-    # If no suggestions are found, offer a Google search button and exit.
     if not movies:
         google_query = message.text.replace(" ", "+")
         button = [[
@@ -828,43 +858,50 @@ async def advantage_spell_chok(message):
             pass
         return
 
-    # Build inline buttons for each movie suggestion
     user_id = message.from_user.id if message.from_user else 0
     buttons = [
         [InlineKeyboardButton(text=movie.get('title'),
                               callback_data=f"spol#{movie.movieID}#{user_id}")]
         for movie in movies
     ]
-    buttons.append([InlineKeyboardButton(text="🚫 ᴄʟᴏsᴇ 🚫", callback_data='close_data')])
+    # The close button uses callback_data "close_spell"
+    buttons.append([InlineKeyboardButton(text="🚫 ᴄʟᴏsᴇ 🚫", callback_data='close_spell')])
     
-    # Send the message with movie suggestions
     suggestion_msg = await message.reply_text(
         text=script.CUDNT_FND.format(message.from_user.mention),
         reply_markup=InlineKeyboardMarkup(buttons),
         reply_to_message_id=message.id
     )
     
-    # Wait for 120 seconds for the user to select an option
+    offered_corrections = ", ".join([movie.get('title') for movie in movies])
+    spell_selection_record[suggestion_msg.message_id] = {
+        'selected': False,
+        'offered': offered_corrections,
+        'original_query': original_query
+    }
+    
     await asyncio.sleep(120)
     
-    # Log to BIN_CHANNEL if no selection was made (assuming the suggestion_msg is still there)
-    log_text = (
-        "❗️ **No Results After Spell Check (User Did Not Select a Corrected Query)**\n\n"
-        f"**User:** {message.from_user.mention} (ID: `{message.from_user.id}`)\n"
-        f"**Original Query:** `{original_query}`\n"
-        f"**Offered Corrections:** {', '.join([movie.get('title') for movie in movies])}\n"
-        "**Status:** No option selected by the user."
-    )
-    # Send the log message to BIN_CHANNEL
-    await message._client.send_message(
-        BIN_CHANNEL,
-        text=log_text,
-        parse_mode=enums.ParseMode.MARKDOWN
-    )
-    
-    # Clean up: delete the suggestion message and the original query message
-    await suggestion_msg.delete()
-    try:
-        await message.delete()
-    except Exception:
-        pass
+    state = spell_selection_record.get(suggestion_msg.message_id, {})
+    if not state.get('selected', False):
+        log_text = (
+            "❗️ **No Results After Spell Check (No Selection Made)**\n\n"
+            f"**User:** {message.from_user.mention} (ID: `{message.from_user.id}`)\n"
+            f"**Original Query:** `{original_query}`\n"
+            f"**Offered Corrections:** {offered_corrections}\n"
+            "**Status:** No option selected by the user."
+        )
+        await message._client.send_message(
+            BIN_CHANNEL,
+            text=log_text,
+            parse_mode=enums.ParseMode.MARKDOWN
+        )
+        try:
+            await suggestion_msg.delete()
+        except Exception:
+            pass
+        try:
+            await message.delete()
+        except Exception:
+            pass
+        spell_selection_record.pop(suggestion_msg.message_id, None)
