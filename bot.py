@@ -11,6 +11,7 @@ import pytz
 from aiohttp import web
 from plugins import web_server, check_expired_premium
 import time
+from keep_alive import keep_alive
 
 class Bot(Client):
     def __init__(self):
@@ -53,6 +54,7 @@ class Bot(Client):
         seconds = int(tt)
         for admin in ADMINS:
             await self.send_message(chat_id=admin, text=f"<b>✅ ʙᴏᴛ ʀᴇsᴛᴀʀᴛᴇᴅ\n🕥 ᴛɪᴍᴇ ᴛᴀᴋᴇɴ - <code>{seconds} sᴇᴄᴏɴᴅs</code></b>")
+        self.loop.create_task(keep_alive())
 
     async def stop(self, *args):
         await super().stop()
