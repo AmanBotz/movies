@@ -21,12 +21,12 @@ async def save_group(bot, message):
             await bot.send_message(LOG_CHANNEL, script.NEW_GROUP_TXT.format(message.chat.title, message.chat.id, message.chat.username, group_link, total, user), disable_web_page_preview=True)  
             await db.add_chat(message.chat.id, message.chat.title)
             btn = [[
-                InlineKeyboardButton('🦸‍♀️  sᴜᴘᴘᴏʀᴛ  🦸‍♀️', url="https://telegram.me/TechifySupport")
+                InlineKeyboardButton('🦸‍♀️  Sᴜᴘᴘᴏʀᴛ  🦸‍♀️', url="https://t.me/+hp_U_uJNgP44ODM1")
             ]]
             reply_markup=InlineKeyboardMarkup(btn)
             await bot.send_message(
                 chat_id=message.chat.id,
-                text=f"<b>☤ ᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴀᴅᴅɪɴɢ ᴍᴇ ɪɴ {message.chat.title}\n\n🕵️ ɪꜰ ʏᴏᴜ ʜᴀᴠᴇ ᴀɴʏ ᴅᴏᴜʙᴛ ᴛʜᴇɴ ᴄʟᴇᴀʀ ɪᴛ ᴜsɪɴɢ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ",
+                text=f"💫 𝖧𝖾𝗒, 𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗂𝗇𝗏𝗂𝗍𝗂𝗇𝗀 𝗆𝖾 𝗍𝗈 {message.chat.title}\n\n🤗 𝖨𝖿 𝗒𝗈𝗎 𝗁𝖺𝗏𝖾 𝖺𝗇𝗒 𝗊𝗎𝗲𝗌𝗍𝗂𝗈𝗇𝗌, 𝗃𝗎𝗌𝗍 𝗍𝖺𝗉 𝗍𝗁𝖾 𝗌𝗎𝗉𝗉𝗈𝗋𝗍 𝗯𝗎𝗍𝗍𝗈𝗇.",
                 reply_markup=reply_markup
             )
 
@@ -34,20 +34,20 @@ async def save_group(bot, message):
 async def leave_a_chat(bot, message):
     r = message.text.split(None)
     if len(message.command) == 1:
-        return await message.reply('<b>ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ʟɪᴋᴇ ᴛʜɪꜱ `/leave -100******`</b>')
+        return await message.reply('<b>Uꜱᴇ Tʜɪꜱ Cᴏᴍᴍᴀɴᴅ Lɪᴋᴇ Tʜɪꜱ `/leave -100******`</b>')
     if len(r) > 2:
         reason = message.text.split(None, 2)[2]
         chat = message.text.split(None, 2)[1]
     else:
         chat = message.command[1]
-        reason = "ɴᴏ ʀᴇᴀꜱᴏɴ ᴘʀᴏᴠɪᴅᴇᴅ..."
+        reason = "Nᴏ Rᴇᴀꜱᴏɴ Pʀᴏᴠɪᴅᴇᴅ..."
     try:
         chat = int(chat)
     except:
         chat = chat
     try:
         btn = [[
-            InlineKeyboardButton('👨‍💻  ᴏᴡɴᴇʀ', url=USERNAME)
+            InlineKeyboardButton('👨‍💻  Oᴡɴᴇʀ', url=USERNAME)
         ]]
         reply_markup=InlineKeyboardMarkup(btn)
         await bot.send_message(
