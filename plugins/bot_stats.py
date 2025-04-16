@@ -68,8 +68,10 @@ async def list_groups(bot, message):
     total_chats = 0
     out = "Groups saved in the database are:\n\n"
     async for chat in chats:
-        out += f"<b>Title - `{chat['title']}`\nID - `{chat['id']}`</b>"
-        if chat['chat_status']['is_disabled']:
+        title = chat.get('title', 'Unknown')  # Safe way to access title
+        chat_id = chat.get('id', 'Unknown ID')
+        out += f"<b>Title - `{title}`\nID - `{chat_id}`</b>"
+        if chat.get('chat_status', {}).get('is_disabled'):
             out += ' (Disabled Chat)'
         out += '\n\n'
         total_chats += 1
@@ -77,7 +79,7 @@ async def list_groups(bot, message):
     try:
         await msg.edit_text(out)
     except MessageTooLong:
-        with open('groups.txt', 'w+') as outfile:
+        with open('groups.txt', 'w+', encoding='utf-8') as outfile:
             outfile.write(out)
         await message.reply_document('groups.txt', caption="List of Groups")
         await msg.delete()

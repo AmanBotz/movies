@@ -58,7 +58,7 @@ async def start(client:Client, message):
         return 
     if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
         status = get_status()
-        aks=await message.reply_text(f"<b>🔥 𝖸𝖾𝗌 {status},\n 𝖧𝗈𝗐 𝖢𝖺𝗇 𝖨 𝖧𝖾𝗅𝗉 𝖸𝗈𝗎")
+        aks=await message.reply_text(f"<b>🔥 ʏᴇs {status},\nʜᴏᴡ ᴄᴀɴ ɪ ʜᴇʟᴘ ʏᴏᴜ??</b>")
         await asyncio.sleep(600)
         await aks.delete()
         await m.delete()
@@ -74,10 +74,12 @@ async def start(client:Client, message):
         await client.send_message(LOG_CHANNEL, script.NEW_USER_TXT.format(message.from_user.id, message.from_user.mention))
     if len(message.command) != 2:
         buttons = [[
-            InlineKeyboardButton('⇆ Sᴇᴀʀᴄʜ Mᴏᴠɪᴇs & Sᴇʀɪᴇs ⇆', url=f'https://t.me/+yrjKAQx0FjwzMzVl')
+            InlineKeyboardButton('⇆ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘs ⇆', url=f'http://telegram.me/{temp.U_NAME}?startgroup=start')
         ],[
-            InlineKeyboardButton('💌 Cᴏɴᴛᴀᴄᴛ Us', url=f'https://t.me/haxoffbot'),
-            InlineKeyboardButton('💸 Bᴜʏ Pʀᴇᴍɪᴜᴍ', callback_data='buy_premium')
+            InlineKeyboardButton('⚙ ꜰᴇᴀᴛᴜʀᴇs', callback_data='features'),
+            InlineKeyboardButton('💸 ᴘʀᴇᴍɪᴜᴍ', callback_data='buy_premium')
+        ],[
+            InlineKeyboardButton('🚫 ᴇᴀʀɴ ᴍᴏɴᴇʏ ᴡɪᴛʜ ʙᴏᴛ 🚫', callback_data='earn')
         ]]   
         reply_markup = InlineKeyboardMarkup(buttons)
         await message.reply_text(script.START_TXT.format(message.from_user.mention, get_status(), message.from_user.id),
@@ -89,9 +91,9 @@ async def start(client:Client, message):
     if len(message.command) == 2 and message.command[1] in ["subscribe", "error", "okay", "help", "buy_premium"]:
         if message.command[1] == "buy_premium":
             btn = [[
-                InlineKeyboardButton('💌 Cᴏɴᴛᴀᴄᴛ Us', url=USERNAME)
+                InlineKeyboardButton('📸 sᴇɴᴅ sᴄʀᴇᴇɴsʜᴏᴛ 📸', url=USERNAME)
             ],[
-                InlineKeyboardButton('🗑 Cʟᴏsᴇ 🗑', callback_data='close_data')
+                InlineKeyboardButton('🗑 ᴄʟᴏsᴇ 🗑', callback_data='close_data')
             ]]            
             await message.reply_photo(
                 photo=(QR_CODE),
@@ -100,10 +102,12 @@ async def start(client:Client, message):
             )
             return
         buttons = [[
-            InlineKeyboardButton('⇆ Sᴇᴀʀᴄʜ Mᴏᴠɪᴇs & Sᴇʀɪᴇs ⇆', url=f'https://t.me/+yrjKAQx0FjwzMzVl')
+            InlineKeyboardButton('⇆ ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘs ⇆', url=f'http://t.me/{temp.U_NAME}?startgroup=start')
         ],[
-            InlineKeyboardButton('💌 Cᴏɴᴛᴀᴄᴛ Us', url=f'https://t.me/haxoffbot'),
-            InlineKeyboardButton('💸 Bᴜʏ Pʀᴇᴍɪᴜᴍ', callback_data='buy_premium')
+            InlineKeyboardButton('⚙ ꜰᴇᴀᴛᴜʀᴇs', callback_data='features'),
+            InlineKeyboardButton('💸 ᴘʀᴇᴍɪᴜᴍ', callback_data='buy_premium')
+        ],[
+            InlineKeyboardButton('🚫 ᴇᴀʀɴ ᴍᴏɴᴇʏ ᴡɪᴛʜ ʙᴏᴛ 🚫', callback_data='earn')
         ]]
         reply_markup = InlineKeyboardMarkup(buttons)
         await message.reply_text(
@@ -125,10 +129,10 @@ async def start(client:Client, message):
     if settings.get('fsub_id', AUTH_CHANNEL) and not await is_subscribed(client, message.from_user.id, channel):
         invite_link = await client.create_chat_invite_link(channel)
         btn = [[
-                InlineKeyboardButton("⛔️ Jᴏɪɴ Nᴏᴡ ⛔️", url=invite_link.invite_link)
+                InlineKeyboardButton("⛔️ ᴊᴏɪɴ ɴᴏᴡ ⛔️", url=invite_link.invite_link)
                 ]]
         if message.command[1] != "subscribe":
-            btn.append([InlineKeyboardButton("♻️ Tʀʏ Aɢᴀɪɴ ♻️", url=f"https://t.me/{temp.U_NAME}?start={message.command[1]}")])
+            btn.append([InlineKeyboardButton("♻️ ᴛʀʏ ᴀɢᴀɪɴ ♻️", url=f"https://t.me/{temp.U_NAME}?start={message.command[1]}")])
         await client.send_message(
             chat_id=message.from_user.id,
             text=script.FSUB_TXT.format(message.from_user.mention),
@@ -154,8 +158,8 @@ async def start(client:Client, message):
             else:
                 rahul = settings.get('tutorial_two', TUTORIAL2) if is_second_shortener else settings.get('tutorial', TUTORIAL)
             buttons = [[
-                InlineKeyboardButton(text="✅️ Vᴇʀɪꜰʏ ✅️", url=verify),
-                InlineKeyboardButton(text="❗ Hᴏᴡ Tᴏ Vᴇʀɪꜰʏ ❓", url=rahul)
+                InlineKeyboardButton(text="✅️ ᴠᴇʀɪꜰʏ ✅️", url=verify),
+                InlineKeyboardButton(text="❗ ʜᴏᴡ ᴛᴏ ᴠᴇʀɪꜰʏ ❓", url=rahul)
             ]]
             reply_markup=InlineKeyboardMarkup(buttons)
             if await db.user_verified(user_id): 
@@ -177,7 +181,7 @@ async def start(client:Client, message):
         _, grp_id, key = data.split("_", 2)
         files = temp.FILES_ID.get(key)
         if not files:
-            await message.reply_text("⚠️ 𝖠𝗅𝗅 𝖥𝗂𝗅𝖾𝗌 𝖭𝗈𝗍 𝖥𝗈𝗎𝗇𝖽 ⚠️")
+            await message.reply_text("<b>⚠️ ᴀʟʟ ꜰɪʟᴇs ɴᴏᴛ ꜰᴏᴜɴᴅ ⚠️</b>")
             return
         settings = await get_settings(int(grp_id))
         all_files = []
@@ -190,7 +194,7 @@ async def start(client:Client, message):
                 file_caption=file.caption
             )
             btn=[[
-                InlineKeyboardButton("Wᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / Fᴀsᴛ Dᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file.file_id}')
+                InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file.file_id}')
             ]]
             dlt=await client.send_cached_media(
                 chat_id=message.from_user.id,
@@ -200,41 +204,19 @@ async def start(client:Client, message):
                 reply_markup=InlineKeyboardMarkup(btn)
             )
             all_files.append(dlt)
-        await asyncio.sleep(60)
+        await asyncio.sleep(600)
         for dlt_file in all_files:
             await dlt_file.delete()
-        t=await client.send_message(message.from_user.id, "<b>⚠️ 𝖸𝗈𝗎𝗋 𝖱𝖾𝗊𝗎𝖾𝗌𝗍𝖾𝖽 𝖥𝗂𝗅𝖾 𝖨𝗌 𝖣𝖾𝗅𝖾𝗍𝖾𝖽 𝖳𝗈 𝖠𝗏𝗈𝗂𝖽 𝖢𝗈𝗉𝗒𝗋𝗂𝗀𝗁𝗍 𝖨𝗇 𝖡𝗈𝗍, 𝖨𝖿 𝖸𝗈𝗎 𝖶𝖺𝗇𝗍 𝖠𝗀𝖺𝗂𝗇 𝖳𝗁𝖾𝗇 𝖲𝖾𝖺𝗋𝖼𝗁 𝖠𝗀𝖺𝗂𝗇 ☺️</b>")
+        t=await client.send_message(message.from_user.id, "<b>⚠️ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛᴇᴅ ꜰɪʟᴇ ɪs ᴅᴇʟᴇᴛᴇᴅ ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪɴ ʙᴏᴛ, ɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ᴀɢᴀɪɴ ᴛʜᴇɴ sᴇᴀʀᴄʜ ᴀɢᴀɪɴ ☺️</b>")
         await asyncio.sleep(120)
         await t.delete()
         return
 
-    type_, grp_id, file_id = data.split("_", 2)
-    files_ = await get_file_details(file_id)
-    if not files_:
-        return await message.reply('<b>⚠️ 𝖥𝗂𝗅𝖾 𝖭𝗈𝗍 𝖥𝗈𝗎𝗇𝖽 ⚠️</b>')
-    files = files_[0]
-    grp_id = int(grp_id)
-    user_id = message.from_user.id
-    settings = await get_settings(int(grp_id))
-    if type_ != 'shortlink' and not settings.get("is_verify", IS_VERIFY):
-        link = await get_shortlink(f"https://t.me/{temp.U_NAME}?start=shortlink_{user_id}_{file_id}", grp_id)
-        mention = message.from_user.mention
-        wish = get_status()
-        name = files.file_name
-        size = get_size(files.file_size)
-        btn = [[
-            InlineKeyboardButton("✅ Fɪʟᴇ ✅", url=link),
-            InlineKeyboardButton("⁉️ Hᴏᴡ Tᴏ Oᴘᴇɴ ⁉️", url=settings['tutorial'])
-        ],[
-            InlineKeyboardButton("😁 Bᴜʏ Sᴜʙꜱᴄʀɪᴘᴛɪᴏɴ  Dɪʀᴇᴄᴛ Fɪʟᴇꜱ 😁", callback_data='buy_premium')
-        ]]
-        await message.reply(f"<b>ʜʏ {mention} {wish},</b>\n\n📂 𝐍𝐚𝐦𝐞 ➠  <code>{name}</code>\n\n♻️ 𝐒𝐢𝐳𝐞 ➠  {size}\n\n<b><i>𝖸𝗈𝗎𝗋 𝖥𝗂𝗅𝖾 𝖨𝗌 𝖱𝖾𝖺𝖽𝗒 𝖦𝖾𝗍 𝖴𝗌𝗂𝗇𝗀 𝖳𝗁𝗂𝗌 𝖫𝗂𝗇𝗄 😋.</i></b>", reply_markup=InlineKeyboardMarkup(btn), protect_content=True)
-        return
 
     files_ = await get_file_details(file_id)           
     if not files_:
         pre, file_id = ((base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))).decode("ascii")).split("_", 1)
-        return await message.reply('<b>⚠️ 𝖠𝗅𝗅 𝖥𝗂𝗅𝖾𝗌 𝖭𝗈𝗍 𝖥𝗈𝗎𝗇𝖽 ⚠️</b>')
+        return await message.reply('<b>⚠️ ᴀʟʟ ꜰɪʟᴇs ɴᴏᴛ ꜰᴏᴜɴᴅ ⚠️</b>')
     files = files_[0]
     settings = await get_settings(int(grp_id))
     CAPTION = settings['caption']
@@ -244,7 +226,7 @@ async def start(client:Client, message):
         file_caption=files.caption
     )
     btn = [[
-        InlineKeyboardButton("Wᴀᴛᴄʜ Oɴʟɪɴᴇ 👀 / Fᴀsᴛ Dᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file_id}')
+        InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file_id}')
     ]]
     d=await client.send_cached_media(
         chat_id=message.from_user.id,
@@ -253,9 +235,9 @@ async def start(client:Client, message):
         protect_content=settings['file_secure'],
         reply_markup=InlineKeyboardMarkup(btn)
     )
-    await asyncio.sleep(60)
+    await asyncio.sleep(600)
     await d.delete()
-    r = await message.reply_text("<b>⚠️ 𝖸𝗈𝗎𝗋 𝖱𝖾𝗊𝗎𝖾𝗌𝗍𝖾𝖽 𝖥𝗂𝗅𝖾 𝖨𝗌 𝖣𝖾𝗅𝖾𝗍𝖾𝖽 𝖳𝗈 𝖠𝗏𝗈𝗂𝖽 𝖢𝗈𝗉𝗒𝗋𝗂𝗀𝗁𝗍 𝖨𝗇 𝖡𝗈𝗍, 𝖨𝖿 𝖸𝗈𝗎 𝖶𝖺𝗇𝗍 𝖠𝗀𝖺𝗂𝗇 𝖳𝗁𝖾𝗇 𝖲𝖾𝖺𝗋𝖼𝗁 𝖠𝗀𝖺𝗂𝗇 ☺️</b>")
+    r = await message.reply_text("<b>⚠️ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛᴇᴅ ꜰɪʟᴇ ɪs ᴅᴇʟᴇᴛᴇᴅ ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ, ɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ᴀɢᴀɪɴ ᴛʜᴇɴ sᴇᴀʀᴄʜ ᴀɢᴀɪɴ ☺️</b>")
     await asyncio.sleep(120)
     await r.delete()
 
@@ -263,47 +245,47 @@ async def start(client:Client, message):
 async def settings(client, message):
     user_id = message.from_user.id if message.from_user else None
     if not user_id:
-        return await message.reply("<b>💔 𝖸𝗈𝗎𝗋 𝖠𝗋𝖾 𝖠𝗇𝗈𝗇𝗒𝗆𝗈𝗎𝗌 𝖠𝖽𝗆𝗂𝗇, 𝖸𝗈𝗎 𝖢𝖺𝗇'𝗍 𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽...</b>")
+        return await message.reply("<b>💔 ʏᴏᴜ ᴀʀᴇ ᴀɴᴏɴʏᴍᴏᴜꜱ ᴀᴅᴍɪɴ ʏᴏᴜ ᴄᴀɴ'ᴛ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ...</b>")
     chat_type = message.chat.type
     if chat_type not in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
-        return await message.reply_text("<code>𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝖨𝗇 𝖦𝗋𝗈𝗎𝗉.</code>")
+        return await message.reply_text("<code>ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ɪɴ ɢʀᴏᴜᴘ.</code>")
     grp_id = message.chat.id
     if not await is_check_admin(client, grp_id, message.from_user.id):
-        return await message.reply_text('<b>𝖸𝗈𝗎 𝖠𝗋𝖾 𝖭𝗈𝗍 𝖠𝖽𝗆𝗂𝗇 𝖨𝗇 𝖳𝗁𝗂𝗌 𝖦𝗋𝗈𝗎𝗉 </b>')
+        return await message.reply_text('<b>ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀᴅᴍɪɴ ɪɴ ᴛʜɪꜱ ɢʀᴏᴜᴘ</b>')
     settings = await get_settings(grp_id)
     title = message.chat.title
     if settings is not None:
             buttons = [[
-                InlineKeyboardButton('Aᴜᴛᴏ Fɪʟᴛᴇʀ', callback_data=f'setgs#auto_filter#{settings["auto_filter"]}#{grp_id}'),
+                InlineKeyboardButton('ᴀᴜᴛᴏ ꜰɪʟᴛᴇʀ', callback_data=f'setgs#auto_filter#{settings["auto_filter"]}#{grp_id}'),
                 InlineKeyboardButton('ᴏɴ ✔️' if settings["auto_filter"] else 'ᴏꜰꜰ ✗', callback_data=f'setgs#auto_filter#{settings["auto_filter"]}#{grp_id}')
             ],[
-                InlineKeyboardButton('Fɪʟᴇ Sᴇᴄᴜʀᴇ', callback_data=f'setgs#file_secure#{settings["file_secure"]}#{grp_id}'),
+                InlineKeyboardButton('ꜰɪʟᴇ sᴇᴄᴜʀᴇ', callback_data=f'setgs#file_secure#{settings["file_secure"]}#{grp_id}'),
                 InlineKeyboardButton('ᴏɴ ✔️' if settings["file_secure"] else 'ᴏꜰꜰ ✗', callback_data=f'setgs#file_secure#{settings["file_secure"]}#{grp_id}')
             ],[
-                InlineKeyboardButton('Iᴍᴅʙ', callback_data=f'setgs#imdb#{settings["imdb"]}#{grp_id}'),
+                InlineKeyboardButton('ɪᴍᴅʙ', callback_data=f'setgs#imdb#{settings["imdb"]}#{grp_id}'),
                 InlineKeyboardButton('ᴏɴ ✔️' if settings["imdb"] else 'ᴏꜰꜰ ✗', callback_data=f'setgs#imdb#{settings["imdb"]}#{grp_id}')
             ],[
-                InlineKeyboardButton('Sᴘᴇʟʟ Cʜᴇᴄᴋ', callback_data=f'setgs#spell_check#{settings["spell_check"]}#{grp_id}'),
+                InlineKeyboardButton('sᴘᴇʟʟ ᴄʜᴇᴄᴋ', callback_data=f'setgs#spell_check#{settings["spell_check"]}#{grp_id}'),
                 InlineKeyboardButton('ᴏɴ ✔️' if settings["spell_check"] else 'ᴏꜰꜰ ✗', callback_data=f'setgs#spell_check#{settings["spell_check"]}#{grp_id}')
             ],[
-                InlineKeyboardButton('Aᴜᴛᴏ Dᴇʟᴇᴛᴇ', callback_data=f'setgs#auto_delete#{settings["auto_delete"]}#{grp_id}'),
+                InlineKeyboardButton('ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ', callback_data=f'setgs#auto_delete#{settings["auto_delete"]}#{grp_id}'),
                 InlineKeyboardButton(f'{get_readable_time(DELETE_TIME)}' if settings["auto_delete"] else 'ᴏꜰꜰ ✗', callback_data=f'setgs#auto_delete#{settings["auto_delete"]}#{grp_id}')
             ],[
-                InlineKeyboardButton('Rᴇsᴜʟᴛ Mᴏᴅᴇ', callback_data=f'setgs#link#{settings["link"]}#{str(grp_id)}'),
+                InlineKeyboardButton('ʀᴇsᴜʟᴛ ᴍᴏᴅᴇ', callback_data=f'setgs#link#{settings["link"]}#{str(grp_id)}'),
                 InlineKeyboardButton('ʟɪɴᴋ' if settings["link"] else 'ʙᴜᴛᴛᴏɴ', callback_data=f'setgs#link#{settings["link"]}#{str(grp_id)}')
             ],[
-                InlineKeyboardButton('Fɪʟᴇꜱ Mᴏᴅᴇ', callback_data=f'setgs#is_verify#{settings.get("is_verify", IS_VERIFY)}#{grp_id}'),
-                InlineKeyboardButton('Vᴇʀɪꜰʏ' if settings.get("is_verify", IS_VERIFY) else 'ꜱʜᴏʀᴛʟɪɴᴋ', callback_data=f'setgs#is_verify#{settings.get("is_verify", IS_VERIFY)}#{grp_id}')
+                InlineKeyboardButton('ꜰɪʟᴇꜱ ᴍᴏᴅᴇ', callback_data=f'setgs#is_verify#{settings.get("is_verify", IS_VERIFY)}#{grp_id}'),
+                InlineKeyboardButton('ᴠᴇʀɪꜰʏ' if settings.get("is_verify", IS_VERIFY) else 'ᴏꜰꜰ ✗', callback_data=f'setgs#is_verify#{settings.get("is_verify", IS_VERIFY)}#{grp_id}')
             ],[
-                InlineKeyboardButton('☕️ Cʟᴏsᴇ ☕️', callback_data='close_data')
+                InlineKeyboardButton('☕️ ᴄʟᴏsᴇ ☕️', callback_data='close_data')
             ]]
             t=await message.reply_text(
-                text=f"𝖢𝗁𝖺𝗇𝗀𝖾 𝖸𝗈𝗎𝗋 𝖲𝖾𝗍𝗍𝗂𝗇𝗀𝗌 <b>'{title}'</b> 𝖠𝗌 𝖸𝗈𝗎 𝖶𝗂𝗌𝗁 ✨",
+                text=f"ᴄʜᴀɴɢᴇ ʏᴏᴜʀ sᴇᴛᴛɪɴɢs ꜰᴏʀ <b>'{title}'</b> ᴀs ʏᴏᴜʀ ᴡɪsʜ ✨",
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=enums.ParseMode.HTML
             )
     else:
-        await message.reply_text('<b>𝖲𝗈𝗆𝖾 𝖶𝖾𝗇𝗍 𝖶𝗋𝗈𝗇𝗀</b>')
+        await message.reply_text('<b>ꜱᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ</b>')
         await asyncio.sleep(120)
         await t.delete() 
 
@@ -311,15 +293,15 @@ async def settings(client, message):
 async def save_template(client, message):
     chat_type = message.chat.type
     if chat_type not in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
-        return await message.reply_text("<b>𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝖨𝗇 𝖦𝗋𝗈𝗎𝗉...</b>")
+        return await message.reply_text("<b>ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ɪɴ ɢʀᴏᴜᴘ...</b>")
     grp_id = message.chat.id
     title = message.chat.title
     if not await is_check_admin(client, grp_id, message.from_user.id):
-        return await message.reply_text('<b>𝖸𝗈𝗎 𝖠𝗋𝖾 𝖭𝗈𝗍 𝖠𝖽𝗆𝗂𝗇 𝖨𝗇 𝖳𝗁𝗂𝗌 𝖦𝗋𝗈𝗎𝗉</b>')
+        return await message.reply_text('<b>ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀᴅᴍɪɴ ɪɴ ᴛʜɪꜱ ɢʀᴏᴜᴘ</b>')
     try:
         template = message.text.split(" ", 1)[1]
     except:
-        return await message.reply_text("𝖨𝗇𝖼𝗈𝗆𝗉𝗅𝖾𝗍𝖾 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 😒")    
+        return await message.reply_text("ɪɴᴄᴏᴍᴘʟᴇᴛᴇ ᴄᴏᴍᴍᴀɴᴅ 😒")    
     await save_group_settings(grp_id, 'template', template)
     await message.reply_text(f"<b>sᴜᴄᴄᴇssꜰᴜʟʟʏ ᴄʜᴀɴɢᴇᴅ ᴛᴇᴍᴘʟᴀᴛᴇ ꜰᴏʀ {title} ᴛᴏ\n\n{template}</b>", disable_web_page_preview=True)
     
@@ -615,6 +597,47 @@ async def all_settings(client, message):
     dlt=await message.reply_text(text, reply_markup=reply_markup, disable_web_page_preview=True)
     await asyncio.sleep(300)
     await dlt.delete()
+
+
+@Client.on_message(filters.command("verifyoff") & filters.user(ADMINS))
+async def verifyoff(bot, message):
+    chat_type = message.chat.type
+    if chat_type == enums.ChatType.PRIVATE:
+        return await message.reply_text("ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ᴡᴏʀᴋꜱ ᴏɴʟʏ ɪɴ ɢʀᴏᴜᴘꜱ !")
+    elif chat_type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
+        grpid = message.chat.id
+        title = message.chat.title
+        # Get the chat details to find the owner
+        chat = await bot.get_chat(grpid)
+        group_owner_id = chat.owner.id if chat.owner else None
+        # Check if the user is either the bot owner or the group owner
+        if message.from_user.id not in ADMINS and message.from_user.id != group_owner_id:
+            return await message.reply_text("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ ᴛᴏ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.")
+    else:
+        return
+    await save_group_settings(grpid, 'is_verify', False)
+    return await message.reply_text("✓ ᴠᴇʀɪꜰʏ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅɪꜱᴀʙʟᴇᴅ.")
+
+    
+@Client.on_message(filters.command("verifyon") & filters.user(ADMINS))
+async def verifyon(bot, message):
+    chat_type = message.chat.type
+    if chat_type == enums.ChatType.PRIVATE:
+        return await message.reply_text("ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ᴡᴏʀᴋꜱ ᴏɴʟʏ ɪɴ ɢʀᴏᴜᴘꜱ !")
+    elif chat_type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
+        grpid = message.chat.id
+        title = message.chat.title
+        # Get the chat details to find the owner
+        chat = await bot.get_chat(grpid)
+        group_owner_id = chat.owner.id if chat.owner else None
+        # Check if the user is either the bot owner or the group owner
+        if message.from_user.id not in ADMINS and message.from_user.id != group_owner_id:
+            return await message.reply_text("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ ᴛᴏ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.")
+    else:
+        return
+    await save_group_settings(grpid, 'is_verify', True)
+    return await message.reply_text("✗ ᴠᴇʀɪꜰʏ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴇɴᴀʙʟᴇᴅ.")
+
 
 @Client.on_message(filters.command('shortlink3'))
 async def set_shortner_3(c, m):
