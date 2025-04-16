@@ -781,52 +781,90 @@ async def auto_filter(client, msg, spoll=False):
                     pass
 
 async def advantage_spell_chok(message):
-    mv_id = message.id
-    search = message.text
+    """
+    This function handles spell checking when no file results are found.
+    If movie suggestions are found but the user does not click one within
+    the timeout period, it logs the event to BIN_CHANNEL.
+    """
+    # Save the original query
+    original_query = message.text  
     chat_id = message.chat.id
     settings = await get_settings(chat_id)
-    query = re.sub(
+    
+    # Remove unwanted words/phrases from the query and append 'movie'
+    filtered_query = re.sub(
         r"\b(pl(i|e)*?(s|z+|ease|se|ese|(e+)s(e)?)|((send|snd|giv(e)?|gib)(\sme)?)|movie(s)?|new|latest|br((o|u)h?)*|^h(e|a)?(l)*(o)*|mal(ayalam)?|t(h)?amil|file|that|find|und(o)*|kit(t(i|y)?)?o(w)?|thar(u)?(o)*w?|kittum(o)*|aya(k)*(um(o)*)?|full\smovie|any(one)|with\ssubtitle(s)?)",
         "", message.text, flags=re.IGNORECASE)
-    RQST = query.strip()
-    query = query.strip() + " movie"
+    filtered_query = filtered_query.strip() + " movie"
+    
+    # Try to retrieve bulk movie suggestions
     try:
-        movies = await get_poster(search, bulk=True)
-    except:
-        k = await message.reply(script.I_CUDNT.format(message.from_user.mention))
+        movies = await get_poster(message.text, bulk=True)
+    except Exception as e:
+        error_msg = await message.reply(script.I_CUDNT.format(message.from_user.mention))
         await asyncio.sleep(60)
-        await k.delete()
+        await error_msg.delete()
         try:
             await message.delete()
-        except:
+        except Exception:
             pass
         return
+
+    # If no suggestions are found, offer a Google search button and exit.
     if not movies:
-        google = search.replace(" ", "+")
+        google_query = message.text.replace(" ", "+")
         button = [[
-            InlineKeyboardButton("🔍 ᴄʜᴇᴄᴋ sᴘᴇʟʟɪɴɢ ᴏɴ ɢᴏᴏɢʟᴇ 🔍", url=f"https://www.google.com/search?q={google}")
+            InlineKeyboardButton("🔍 ᴄʜᴇᴄᴋ sᴘᴇʟʟɪɴɢ ᴏɴ ɢᴏᴏɢʟᴇ 🔍", url=f"https://www.google.com/search?q={google_query}")
         ]]
-        k = await message.reply_text(text=script.I_CUDNT.format(search), reply_markup=InlineKeyboardMarkup(button))
+        no_result_msg = await message.reply_text(
+            text=script.I_CUDNT.format(message.text),
+            reply_markup=InlineKeyboardMarkup(button)
+        )
         await asyncio.sleep(120)
-        await k.delete()
+        await no_result_msg.delete()
         try:
             await message.delete()
-        except:
+        except Exception:
             pass
         return
-    user = message.from_user.id if message.from_user else 0
-    buttons = [[
-        InlineKeyboardButton(text=movie.get('title'), callback_data=f"spol#{movie.movieID}#{user}")
-    ]
+
+    # Build inline buttons for each movie suggestion
+    user_id = message.from_user.id if message.from_user else 0
+    buttons = [
+        [InlineKeyboardButton(text=movie.get('title'),
+                              callback_data=f"spol#{movie.movieID}#{user_id}")]
         for movie in movies
     ]
-    buttons.append(
-        [InlineKeyboardButton(text="🚫 ᴄʟᴏsᴇ 🚫", callback_data='close_data')]
+    buttons.append([InlineKeyboardButton(text="🚫 ᴄʟᴏsᴇ 🚫", callback_data='close_data')])
+    
+    # Send the message with movie suggestions
+    suggestion_msg = await message.reply_text(
+        text=script.CUDNT_FND.format(message.from_user.mention),
+        reply_markup=InlineKeyboardMarkup(buttons),
+        reply_to_message_id=message.id
     )
-    d = await message.reply_text(text=script.CUDNT_FND.format(message.from_user.mention), reply_markup=InlineKeyboardMarkup(buttons), reply_to_message_id=message.id)
+    
+    # Wait for 120 seconds for the user to select an option
     await asyncio.sleep(120)
-    await d.delete()
+    
+    # Log to BIN_CHANNEL if no selection was made (assuming the suggestion_msg is still there)
+    log_text = (
+        "❗️ **No Results After Spell Check (User Did Not Select a Corrected Query)**\n\n"
+        f"**User:** {message.from_user.mention} (ID: `{message.from_user.id}`)\n"
+        f"**Original Query:** `{original_query}`\n"
+        f"**Offered Corrections:** {', '.join([movie.get('title') for movie in movies])}\n"
+        "**Status:** No option selected by the user."
+    )
+    # Send the log message to BIN_CHANNEL
+    await message._client.send_message(
+        BIN_CHANNEL,
+        text=log_text,
+        parse_mode=enums.ParseMode.MARKDOWN
+    )
+    
+    # Clean up: delete the suggestion message and the original query message
+    await suggestion_msg.delete()
     try:
         await message.delete()
-    except:
+    except Exception:
         pass
