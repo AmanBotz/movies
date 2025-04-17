@@ -59,6 +59,7 @@ LANGUAGES = ["hindi", "english", "telugu", "tamil", "kannada", "malayalam"]
 auth_channel = environ.get('AUTH_CHANNEL', '-1002520206765')
 AUTH_CHANNEL = int(auth_channel) if auth_channel and id_pattern.search(auth_channel) else None
 SUPPORT_GROUP = int(environ.get('SUPPORT_GROUP', '-1002621915858'))
+SEARCH_GROUP = environ.get('SEARCH_GROUP', 'https://t.me/+IjfAdDZbEoRiNjQ1')  # Replace with your movies search group link (not group id )
 
 # bot settings
 AUTO_FILTER = is_enabled('AUTO_FILTER', True)
