@@ -1,10 +1,10 @@
 import os
 class script(object):
     
-    START_TXT = """<b><blockquote>Hᴇʏ {} {}</blockquote>
+    START_TXT = """<blockquote>Hᴇʏ {} {}</blockquote>
     
-I Aᴍ A Pσᴡєʀғᴜʟ Mσᴠɪᴇє Pʀσᴠɪᴅєʀ Bσᴛ. I Cαɴ Pʀσᴠɪᴅє Yσᴜ Mσᴠɪєs, Sєʀɪєs & Aɴɪᴍєs Dɪʀєᴄᴛʟʏ Hєʀᴇє Oʀ Yσᴜ Cαɴ Sєαʀᴄʜ Iɴ Oᴜʀ Gʀσᴜᴘ...
-</b>"""
+I Aᴍ A Pσᴡєʀғᴜʟ Mσᴠɪє Pʀσᴠɪᴅєʀ Bσᴛ. I Cαɴ Pʀσᴠɪᴅє Yσᴜ Mσᴠɪєs, Sєʀɪєs & Aɴɪᴍєs Dɪʀєᴄᴛʟʏ Hєʀє Oʀ Yσᴜ Cαɴ Sєαʀᴄʜ Iɴ Oᴜʀ Gʀσᴜᴘ...
+"""
     
     HELP_TXT = """<b><i>ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴꜱ ᴛᴏ ɢᴇᴛ ᴅᴏᴄᴜᴍᴇɴᴛᴀᴛɪᴏɴ ᴀʙᴏᴜᴛ ꜱᴘᴇᴄɪꜰɪᴄ ᴍᴏᴅᴜʟᴇꜱ..</i></b>"""
     
@@ -73,7 +73,7 @@ Thís Fílє Wíll Bє Dєlєtєd In 2 Mínutєs Tσ Avσíd Cσpчríght. Sσ P
 
 𝗜 𝗰𝗼𝘂𝗹𝗱𝗻'𝘁 𝗳𝗶𝗻𝗱 𝗮𝗻𝘆𝘁𝗵𝗶𝗻𝗴 𝗿𝗲𝗹𝗮𝘁𝗲𝗱 𝘁𝗼 𝘁𝗵𝗮𝘁 😞... 𝗰𝗵𝗲𝗰𝗸 𝘆𝗼𝘂𝗿 𝘀𝗽𝗲𝗹𝗹𝗶𝗻𝗴."""
     
-    CUDNT_FND = """<blockquote>🤧 Hєʟʟσ {}</blockquote>
+    CUDNT_FND = """<blockquote>✯ Hєʟʟσ {}</blockquote>
 
 I Cσᴜʟᴅɴ'ᴛ Fɪɴᴅ Aɴʏᴛʜɪɴɢ Rєʟᴀᴛєᴅ Tσ Tʜαᴛ. Dɪᴅ Yσᴜ Mєαɴ Aɴʏ Oɴє Oғ Tʜєsє ?? ☟ ☟"""
     
