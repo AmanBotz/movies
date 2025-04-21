@@ -1,7 +1,7 @@
 import os
 class script(object):
     
-    START_TXT = """<blockquote>Hᴇʏ {} {}</blockquote>
+    START_TXT = """<blockquote>Hєʏ {} {}</blockquote>
     
 I Aᴍ A Pσᴡєʀғᴜʟ Mσᴠɪє Pʀσᴠɪᴅєʀ Bσᴛ. I Cαɴ Pʀσᴠɪᴅє Yσᴜ Mσᴠɪєs, Sєʀɪєs & Aɴɪᴍєs Dɪʀєᴄᴛʟʏ Hєʀє Oʀ Yσᴜ Cαɴ Sєαʀᴄʜ Iɴ Oᴜʀ Gʀσᴜᴘ...
 """
@@ -50,7 +50,7 @@ User - {}"""
 ❗️ ʟᴀɴɢᴜᴀɢᴇ - {languages}</b>
 """
 
-    FILE_CAPTION = """<b><a href=https://telegram.me/Haxoff> {file_name} </a></b>
+    FILE_CAPTION = """<a href=https://telegram.me/Haxoff> {file_name} </a>
 
 Thís Fílє Wíll Bє Dєlєtєd In 2 Mínutєs Tσ Avσíd Cσpчríght. Sσ Plєαsє Fσrwαrd Thís Fílє Tσ Sαvєd Mєssαgєs."""
 
@@ -59,19 +59,19 @@ Thís Fílє Wíll Bє Dєlєtєd In 2 Mínutєs Tσ Avσíd Cσpчríght. Sσ P
 ⏰ Tɪᴍᴇ : <code>{}</code>
 🌐 Tɪᴍᴇᴢᴏɴᴇ : <code>Asia/Kolkata</code></b>"""
 
-    ALRT_TXT = """❌ Thís Is Nσt Fσr Yσu Síʀ ⛔️"""
+    ALRT_TXT = """❌ Tʜɪs Is Nσᴛ Fσʀ Yσᴜ Sɪʀ ⛔️"""
 
-    OLD_ALRT_TXT = """Yσu Aʀє Usíɴɢ Oɴє Oғ Mʏ Oʟᴅ Mєssαɢєs, Pʟєαsє Sєɴᴅ Tʜє Rєǫᴜєsᴛ Aɢαíɴ."""
+    OLD_ALRT_TXT = """Yσu Aʀє Usíɴɢ Oɴє Oғ Mʏ Oʟᴅ Mєssαɢєs, Pʟєαsє Sєɴᴅ Tʜє Rєǫᴜєsᴛ Aɢαɪɴ."""
 
     NO_RESULT_TXT = """🗳 Tʜís Rєǫᴜєsᴛ Is Nσᴛ Avαíʟαвʟє. Yσᴜʀ Rєǫᴜᴇsᴛ Sєnt Tσ Aᴅᴍíɴs, Iᴛ Wíʟʟ Bє Aᴅᴅєᴅ As Sσσɴ As Pσssíвʟє, Yσᴜ Wɪʟʟ Bє Nσᴛɪғɪєᴅ.🗳"""
     
-    I_CUDNT = """🤧 𝗛𝗲𝗹𝗹𝗼 {}
+    I_CUDNT = """<blockquote>🤧 Hєʟʟᴏ {}</blockquote>
 
-𝗜 𝗰𝗼𝘂𝗹𝗱𝗻'𝘁 𝗳𝗶𝗻𝗱 𝗮𝗻𝘆 𝗺𝗼𝘃𝗶𝗲 𝗼𝗿 𝘀𝗲𝗿𝗶𝗲𝘀 𝗶𝗻 𝘁𝗵𝗮𝘁 𝗻𝗮𝗺𝗲.. 😐"""
+I Cσᴜʟᴅɴ'ᴛ Fɪɴᴅ Aɴʏ Mσvɪє Oʀ Sєʀɪєs Iɴ Tʜαᴛ Nαᴍє.. 😐"""
 
-    I_CUD_NT = """😑 𝗛𝗲𝗹𝗹𝗼 {}
+    I_CUD_NT = """<blockquote>😑 Hєʟʟᴏ {} </blockquote>
 
-𝗜 𝗰𝗼𝘂𝗹𝗱𝗻'𝘁 𝗳𝗶𝗻𝗱 𝗮𝗻𝘆𝘁𝗵𝗶𝗻𝗴 𝗿𝗲𝗹𝗮𝘁𝗲𝗱 𝘁𝗼 𝘁𝗵𝗮𝘁 😞... 𝗰𝗵𝗲𝗰𝗸 𝘆𝗼𝘂𝗿 𝘀𝗽𝗲𝗹𝗹𝗶𝗻𝗴."""
+I Cσᴜʟᴅ'ᴛ Fɪɴᴅ Aɴʏᴛʜɪɴɢ Rєʟᴀᴛєᴅ Tᴏ Tʜαᴛ 😞... Cʜєᴄᴋ Yσᴜʀ Sᴘєʟʟɪɴɢ."""
     
     CUDNT_FND = """<blockquote>✯ Hєʟʟσ {}</blockquote>
 
@@ -81,34 +81,28 @@ I Cσᴜʟᴅɴ'ᴛ Fɪɴᴅ Aɴʏᴛʜɪɴɢ Rєʟᴀᴛєᴅ Tσ Tʜαᴛ. Dɪ
 
 <code>/font hi how are you</code>"""
 
-    PREMIUM_TEXT = """<b><i><blockquote>Avαíʟαвʟє Pʟαɴs  ♻️</blockquote>
+    PREMIUM_TEXT = """<blockquote>Avαíʟαвʟє Pʟαɴs  ️☟</blockquote>
 
-• 𝟷 ᴡᴇᴇᴋ  -  ₹𝟹𝟶
-• 𝟷 ᴍᴏɴᴛʜ  -  ₹𝟻𝟶
-• 𝟹 ᴍᴏɴᴛʜs  -  ₹𝟷𝟶𝟶
-• 𝟼 ᴍᴏɴᴛʜs  -  ₹𝟸𝟶𝟶
+◆ 𝟷 Wєєᴋ  -  ₹𝟹𝟶
+◆ 𝟷 Mσɴᴛʜ  -  ₹𝟻𝟶
+◆ 𝟹 Mσɴᴛʜs  -  ₹𝟷𝟶𝟶
+◆ 𝟼 Mσɴᴛʜs  -  ₹𝟸𝟶𝟶
 
 •─────•─────────•─────•
-<blockquote>ᴘʀᴇᴍɪᴜᴍ ꜰᴇᴀᴛᴜʀᴇs  🎁</blockquote>
+<blockquote>Pʀєᴍɪᴜᴍ Fєαᴛᴜʀєs  🎁</blockquote>
 
-○ ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪꜰʏ
-○ ᴅɪʀᴇᴄᴛ ꜰɪʟᴇs   
-○ ᴀᴅ-ꜰʀᴇᴇ ᴇxᴘᴇʀɪᴇɴᴄᴇ 
-○ ʜɪɢʜ-sᴘᴇᴇᴅ ᴅᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋ                         
-○ ᴍᴜʟᴛɪ-ᴘʟᴀʏᴇʀ sᴛʀᴇᴀᴍɪɴɢ ʟɪɴᴋs                           
-○ ᴜɴʟɪᴍɪᴛᴇᴅ ᴍᴏᴠɪᴇꜱ, ꜱᴇʀɪᴇꜱ & ᴀɴɪᴍᴇ                                                                         
-○ ꜰᴜʟʟ ᴀᴅᴍɪɴ sᴜᴘᴘᴏʀᴛ                              
-○ ʀᴇǫᴜᴇsᴛ ᴡɪʟʟ ʙᴇ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ɪɴ 𝟷ʜ
+☛ Nσ NєєD Tᴏ Vєʀɪғʏ
+☛ Dɪʀєᴄᴛ Fɪʟєs
+☛ Aᴅ-Fʀєє Exᴘєʀɪєɴᴄє
+☛ Uɴʟɪᴍɪᴛєᴅ Mσᴠɪєs, Sєʀɪєs & Aɴɪᴍєs
+
+☛ Fᴜʟʟ Aᴅᴍɪɴ Sᴜᴘᴘσʀᴛ
+☛ Rєǫᴜєsᴛ Wɪʟʟ Bє Cσᴍᴘʟєᴛєᴅ Iɴ 𝟷Hσᴜʀ
 •─────•─────────•─────•
 
+⇢ Cʜєᴄᴋ Yσᴜʀ Aᴄᴛɪᴠє Pʟαɴ /myplan
 
-✨ ᴜᴘɪ ɪᴅ - <code>TechifyBots@UPI</code>
-
-ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴀᴄᴛɪᴠᴇ ᴘʟᴀɴ  /myplan
-
-💢 ᴍᴜsᴛ sᴇɴᴅ sᴄʀᴇᴇɴsʜᴏᴛ ᴀꜰᴛᴇʀ ᴘᴀʏᴍᴇɴᴛ
-
-‼️ ᴀꜰᴛᴇʀ sᴇɴᴅɪɴɢ ᴀ sᴄʀᴇᴇɴsʜᴏᴛ ᴘʟᴇᴀsᴇ ɢɪᴠᴇ ᴍᴇ sᴏᴍᴇ ᴛɪᴍᴇ ᴛᴏ ᴀᴅᴅ ʏᴏᴜ ɪɴ ᴛʜᴇ ᴘʀᴇᴍɪᴜᴍ ᴠᴇʀsɪᴏɴ.</i></b>"""
+‼️ Cσɴᴛαcᴛ Us Oɴ Oᴜʀ Bσᴛ @HaxoffBot Fσʀ Bᴜʏɪɴɢ Pʀєᴍɪᴜᴍ Oʀ Aɴʏ Oᴛʜєʀ Qᴜєʀʏ"""
 
     EARN_TEXT = """<b><i><blockquote>ʜᴏᴡ ᴛᴏ ᴇᴀʀɴ ᴍᴏɴᴇʏ ʙʏ ᴛʜɪs ʙᴏᴛ  🤑</blockquote>
 
@@ -126,26 +120,25 @@ I Cσᴜʟᴅɴ'ᴛ Fɪɴᴅ Aɴʏᴛʜɪɴɢ Rєʟᴀᴛєᴅ Tσ Tʜαᴛ. Dɪ
 
 💯 ɴᴏᴛᴇ - ᴛʜɪs ʙᴏᴛ ɪs ꜰʀᴇᴇ ᴛᴏ ᴀʟʟ, ʏᴏᴜ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ʙᴏᴛ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘs ᴀɴᴅ ᴇᴀʀɴ ᴜɴʟɪᴍɪᴛᴇᴅ ᴍᴏɴᴇʏ.</i></b>"""
 
-    VERIFICATION_TEXT = """<b>ʜʏ {} {},
+    VERIFICATION_TEXT = """<blockquote>Hєʏ {} {}</blockquote>
 
-ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴠᴇʀɪꜰɪᴇᴅ ᴛᴏᴅᴀʏ 😐
-ᴄʟɪᴄᴋ ᴏɴ ᴠᴇʀɪꜰʏ ᴀɴᴅ ɢᴇᴛ ᴜɴʟɪᴍɪᴛᴇᴅ ᴀᴄᴄᴇꜱꜱ ᴛɪʟʟ ɴᴇxᴛ ᴠᴇʀɪꜰɪᴄᴀᴛɪᴏɴ
+❝Yσᴜʀ Aʀє Nσᴛ Vєʀɪғɪєᴅ Tσᴅαʏ❞
 
-#ᴠᴇʀɪꜰɪᴄᴀᴛɪᴏɴ:- 1/3
+Cʟɪᴄᴋ Oɴ Vєʀɪғʏ Aɴᴅ Gєᴛ Uɴʟɪᴍɪᴛєᴅ Aᴄᴄєss Tɪʟʟ Mɪᴅɴɪɢʜᴛ 12αᴍ.
 
-<blockquote>ɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ᴅɪʀᴇᴄᴛ ꜰɪʟᴇs ᴛʜᴇɴ ʏᴏᴜ ᴄᴀɴ ᴛᴀᴋᴇ ᴘʀᴇᴍɪᴜᴍ sᴇʀᴠɪᴄᴇ. (ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪꜰʏ)</blockquote>
+<blockquote>Iғ Yσᴜ Wαɴᴛ Dɪʀєᴄᴛ Fɪʟєs Tʜєɴ Yσᴜ Cαn Bᴜʏ Pʀєᴍɪᴜᴍ. [Nσ Nєєᴅ Tσ Vєʀɪғʏ]</blockquote>
 
-ᴄʜᴇᴄᴋ /plan ꜰᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟꜱ...</b>"""
+Cʜєᴄᴋ /plan Fσʀ Mσʀє Dєᴛαɪʟs..."""
 
-    VERIFY_COMPLETE_TEXT = """<b>ʜʏ {},
+    VERIFY_COMPLETE_TEXT = """<blockquote>Hєʏ {}</blockquote>
 
-ʏᴏᴜ ʜᴀᴠᴇ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ᴛʜᴇ 𝟷sᴛ ᴠᴇʀɪꜰɪᴄᴀᴛɪᴏɴ...
+☑️ Yσᴜ Hαvє Cσᴍᴘєʟєᴛєᴅ Tʜє Vєʀɪғɪᴄαᴛɪσɴ ...
 
-ɴᴏᴡ ʏᴏᴜ ʜᴀᴠᴇ ᴜɴʟɪᴍɪᴛᴇᴅ ᴀᴄᴄᴇss ᴛɪʟʟ ɴᴇxᴛ ᴠᴇʀɪꜰɪᴄᴀᴛɪᴏɴ ❤️‍🔥
+☛ Nσᴡ Yσᴜ Hαᴠє Uɴʟɪᴍɪᴛєᴅ Aᴄᴄєss Tɪʟʟ Mɪᴅɴɪɢʜᴛ 12αᴍ ❤️ 🔥
 
-ɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ᴅɪʀᴇᴄᴛ ꜰɪʟᴇꜱ ᴡɪᴛʜᴏᴜᴛ ᴀɴʏ ᴠᴇʀɪꜰɪᴄᴀᴛɪᴏɴꜱ ᴛʜᴇɴ ʙᴜʏ ᴏᴜʀ ꜱᴜʙꜱᴄʀɪᴘᴛɪᴏɴ 😁
+<blockquote>Iғ Yσᴜ Wαɴᴛ Dɪʀєᴄᴛ Fɪʟєs Wɪᴛʜσᴜᴛ Vєʀɪғɪᴄαᴛɪσɴ Tʜєɴ Bᴜʏ Oᴜʀ Sᴜʙᴄʀɪᴘᴛɪσɴ</blockquote
 
-💶 ᴄʜᴇᴄᴋ /plan ᴛᴏ ʙᴜʏ ꜱᴜʙꜱᴄʀɪᴘᴛɪᴏɴ</b>"""
+💶 Cʜєᴄᴋ /plan Fσʀ Bᴜʏ Sᴜʙᴄʀɪᴘᴛɪσɴ"""
 
     SECOND_VERIFICATION_TEXT = """<b>ʜʏ {} {},
 
@@ -217,9 +210,9 @@ I Cσᴜʟᴅɴ'ᴛ Fɪɴᴅ Aɴʏᴛʜɪɴɢ Rєʟᴀᴛєᴅ Tσ Tʜαᴛ. Dɪ
 
     FSUB_TXT = """{},
 
-<i><b>🙁 ꜰɪʀꜱᴛ ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ ᴛʜᴇɴ ʏᴏᴜ ᴡɪʟʟ ɢᴇᴛ ᴍᴏᴠɪᴇ, ᴏᴛʜᴇʀᴡɪꜱᴇ ʏᴏᴜ ᴡɪʟʟ ɴᴏᴛ ɢᴇᴛ ɪᴛ.
+🙁 Fɪʀsᴛ Jσɪɴ Oᴜʀ Cʜαɴɴєʟ Tʜєɴ Yσᴜ Wɪʟʟ Gєᴛ Fɪʟє, Oᴛʜєʀᴡɪsє Yσᴜ Wɪʟʟ Nσᴛ Gєᴛ Iᴛ.
 
-ᴄʟɪᴄᴋ ᴊᴏɪɴ ɴᴏᴡ ʙᴜᴛᴛᴏɴ 👇</b></i>"""
+☟☟ Jσɪɴ Nσᴡ ☟☟"""
 
     DONATE_TXT = """<blockquote>❤️‍🔥 𝐓𝐡𝐚𝐧𝐤𝐬 𝐟𝐨𝐫 𝐬𝐡𝐨𝐰𝐢𝐧𝐠 𝐢𝐧𝐭𝐞𝐫𝐞𝐬𝐭 𝐢𝐧 𝐃𝐨𝐧𝐚𝐭𝐢𝐨𝐧</blockquote>
 
@@ -227,5 +220,5 @@ I Cσᴜʟᴅɴ'ᴛ Fɪɴᴅ Aɴʏᴛʜɪɴɢ Rєʟᴀᴛєᴅ Tσ Tʜαᴛ. Dɪ
 
 ❣️ 𝐷𝑜𝑛𝑎𝑡𝑖𝑜𝑛𝑠 𝑎𝑟𝑒 𝑟𝑒𝑎𝑙𝑙𝑦 𝑎𝑝𝑝𝑟𝑒𝑐𝑖𝑎𝑡𝑒𝑑 𝑖𝑡 ℎ𝑒𝑙𝑝𝑠 𝑖𝑛 𝑏𝑜𝑡 𝑑𝑒𝑣𝑒𝑙𝑜𝑝𝑚𝑒𝑛𝑡
 
-💖 𝐔𝐏𝐈 𝐈𝐃 : <code>TechifyBots@UPI</code>
+💖 @HaxoffBot
 """
