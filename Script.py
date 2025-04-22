@@ -52,7 +52,7 @@ User - {}"""
 
     FILE_CAPTION = """<a href=https://telegram.me/Haxoff> {file_name} </a>
 
-Thís Fílє Wíll Bє Dєlєtєd In 2 Mínutєs Tσ Avσíd Cσpчríght. Sσ Plєαsє Fσrwαrd Thís Fílє Tσ Sαvєd Mєssαgєs."""
+<blockquote>Tʜɪs Fɪʟє Wɪʟʟ Bє Dєʟєᴛєᴅ Iɴ 2 Mɪɴᴜᴛєs Tσ Aᴠσɪᴅ Cσᴘʏʀɪɢʜᴛ. Sᴏ Pʟєαsє Fᴏʀᴡαʀᴅ Tʜɪs Fɪʟє Tσ Sαᴠєᴅ Mєssαɢєs.</blockquote>"""
 
     RESTART_TXT = """<b>
 📅 Dᴀᴛᴇ : <code>{}</code>
@@ -136,7 +136,7 @@ Cʜєᴄᴋ /plan Fσʀ Mσʀє Dєᴛαɪʟs..."""
 
 ☛ Nσᴡ Yσᴜ Hαᴠє Uɴʟɪᴍɪᴛєᴅ Aᴄᴄєss Tɪʟʟ Mɪᴅɴɪɢʜᴛ 12αᴍ ❤️ 🔥
 
-<blockquote>Iғ Yσᴜ Wαɴᴛ Dɪʀєᴄᴛ Fɪʟєs Wɪᴛʜσᴜᴛ Vєʀɪғɪᴄαᴛɪσɴ Tʜєɴ Bᴜʏ Oᴜʀ Sᴜʙᴄʀɪᴘᴛɪσɴ</blockquote
+<blockquote>Iғ Yσᴜ Wαɴᴛ Dɪʀєᴄᴛ Fɪʟєs Wɪᴛʜσᴜᴛ Vєʀɪғɪᴄαᴛɪσɴ Tʜєɴ Bᴜʏ Oᴜʀ Sᴜʙᴄʀɪᴘᴛɪσɴ</blockquote>
 
 💶 Cʜєᴄᴋ /plan Fσʀ Bᴜʏ Sᴜʙᴄʀɪᴘᴛɪσɴ"""
 
