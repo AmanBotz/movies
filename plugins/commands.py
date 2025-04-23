@@ -187,9 +187,6 @@ async def start(client:Client, message):
                 file_size = get_size(file.file_size),
                 file_caption=file.caption
             )
-            btn=[[
-                InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file.file_id}')
-            ]]
             dlt=await client.send_cached_media(
                 chat_id=message.from_user.id,
                 file_id=file.file_id,
@@ -219,9 +216,6 @@ async def start(client:Client, message):
         file_size = get_size(files.file_size),
         file_caption=files.caption
     )
-    btn = [[
-        InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file_id}')
-    ]]
     d=await client.send_cached_media(
         chat_id=message.from_user.id,
         file_id=file_id,
