@@ -27,7 +27,7 @@ async def pm_search(client, message):
     if PM_SEARCH:
         await auto_filter(client, message)  
     else:
-        await message.reply_text("⚠️Sσσʀʏ I Cαɴ'ᴛ Wσʀᴋ Iɴ Pᴍ")
+        await message.reply_text("⚠️Sσʀʀʏ I Cαɴ'ᴛ Wσʀᴋ Iɴ Pᴍ")
     
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def group_search(client, message):
@@ -138,7 +138,7 @@ async def next_page(bot, query):
 
         btn.append(
             [InlineKeyboardButton("☚ Bαᴄᴋ", callback_data=f"next_{req}_{key}_{off_set}"),
-             InlineKeyboardButton(f"ᴘᴀɢᴇ {math.ceil(int(offset) / int(MAX_BTN)) + 1} / {math.ceil(total / int(MAX_BTN))}", callback_data="pages")]
+             InlineKeyboardButton(f"Pαɢє {math.ceil(int(offset) / int(MAX_BTN)) + 1} / {math.ceil(total / int(MAX_BTN))}", callback_data="pages")]
         )
     elif off_set is None:
         btn.append(
@@ -358,7 +358,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton('❌ Cʟσsᴇ ❌', callback_data='close_data')
+                        InlineKeyboardButton('✠ Cʟσsє ✠', callback_data='close_data')
                     ]
                 ]
             )
@@ -497,7 +497,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         btn = [[
             InlineKeyboardButton('Cᴏɴᴛαᴄᴛ Us', url=USERNAME)
         ],[
-            InlineKeyboardButton('🗑 Cʟσsє 🗑', callback_data='close_data')
+            InlineKeyboardButton('✠ Cʟσsє ✠', callback_data='close_data')
         ]]
         reply_markup = InlineKeyboardMarkup(btn)
         await query.message.reply_photo(
@@ -541,7 +541,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 InlineKeyboardButton('ꜰɪʟᴇꜱ ᴍᴏᴅᴇ', callback_data=f'setgs#is_verify#{settings.get("is_verify", IS_VERIFY)}#{grp_id}'),
                 InlineKeyboardButton('ᴠᴇʀɪꜰʏ' if settings.get("is_verify", IS_VERIFY) else 'ꜱʜᴏʀᴛʟɪɴᴋ', callback_data=f'setgs#is_verify#{settings.get("is_verify", IS_VERIFY)}#{grp_id}')
             ],[
-                InlineKeyboardButton('☕️ ᴄʟᴏsᴇ ☕️', callback_data='close_data')
+                InlineKeyboardButton('', callback_data='close_data')
             ]]
             reply_markup = InlineKeyboardMarkup(buttons)
             d = await query.message.edit_reply_markup(reply_markup)
@@ -583,7 +583,8 @@ async def auto_filter(client, msg, spoll=False):
     pre = 'filep' if settings['file_secure'] else 'file'
     temp.CHAT[message.from_user.id] = message.chat.id
     settings = await get_settings(message.chat.id)
-    del_msg = f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>" if settings["auto_delete"] else ''
+    del_msg = f"\n\n⚠️ Tʜɪs Mєssαɢє Wɪʟʟ Bє Aᴜᴛσ Dєʟєᴛє Aғᴛєʀ <code>{get_readable_time(DELETE_TIME)}</code> Tᴏ Aᴠσɪᴅ Cσᴘʏʀɪɢʜᴛ Issᴜєs." if settings["auto_delete"] else ''
+
     links = ""
     if settings["link"]:
         btn = []
@@ -688,7 +689,7 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"<b>📂 Hєʀє I Fσᴜɴᴅ Fσʀ Yσᴜʀ Sєαʀᴄʜ {search}</b>"
+        cap = f"📂 Hєʀє I Fσᴜɴᴅ Fσʀ Yσᴜʀ Sєαʀᴄʜ <code>{search}</code>"
     del_msg = f"\n\n⚠️ Tʜɪs Mєssαɢє Wɪʟʟ Bє Aᴜᴛσ Dєʟєᴛє Aғᴛєʀ <code>{get_readable_time(DELETE_TIME)}</code> Tᴏ Aᴠσɪᴅ Cσᴘʏʀɪɢʜᴛ Issᴜєs." if settings["auto_delete"] else ''
     CAP[key] = cap
     if imdb and imdb.get('poster'):
