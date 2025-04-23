@@ -364,29 +364,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
             )
         )
 
-    elif query.data.startswith("stream"):
-        user_id = query.from_user.id
-        if not await db.has_premium_access(user_id):
-            d=await query.message.reply("💔Tʜɪs Fєαᴛᴜʀє Is Oɴʟʏ Fσʀ Bσᴛ Pʀєᴍɪᴜᴍ Usєʀs.\n\n Iғ Yσᴜ Wαɴᴛ Bσᴛ Sᴜʙᴄʀɪᴘᴛɪσɴ Tʜєɴ Sєɴᴅ /plan")
-            await asyncio.sleep(120)
-            await d.delete()
-            return
-        file_id = query.data.split('#', 1)[1]
-        NOBITA = await client.send_cached_media(
-            chat_id=BIN_CHANNEL,
-            file_id=file_id)
-        online = f"https://{URL}/watch/{NOBITA.id}?hash={get_hash(NOBITA)}"
-        download = f"https://{URL}/{NOBITA.id}?hash={get_hash(NOBITA)}"
-        btn= [[
-            InlineKeyboardButton("Wαᴛᴄʜ Oɴʟɪɴє", url=online),
-            InlineKeyboardButton("Fαsᴛ Dσᴡɴʟσαᴅ", url=download)
-        ],[
-            InlineKeyboardButton('🧿 Wαᴛᴄʜ Oɴ Tєʟєɢʀαᴍ 🖥', web_app=WebAppInfo(url=online))
-        ]]
-        await query.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(btn)
-        )
-
     elif query.data == "buttons":
         await query.answer("Nσ Mσʀє Pαɢєs 😊", show_alert=True)
 
