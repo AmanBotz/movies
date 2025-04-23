@@ -192,7 +192,6 @@ async def start(client:Client, message):
                 file_id=file.file_id,
                 caption=f_caption,
                 protect_content=settings['file_secure'],
-                reply_markup=InlineKeyboardMarkup(btn)
             )
             all_files.append(dlt)
         await asyncio.sleep(600)
@@ -221,7 +220,6 @@ async def start(client:Client, message):
         file_id=file_id,
         caption=f_caption,
         protect_content=settings['file_secure'],
-        reply_markup=InlineKeyboardMarkup(btn)
     )
     await asyncio.sleep(600)
     await d.delete()
