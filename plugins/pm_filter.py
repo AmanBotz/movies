@@ -5,7 +5,7 @@ import math
 import logging
 from pyrogram.errors.exceptions.bad_request_400 import MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty
 from Script import script
-from info import MAX_BTN, BIN_CHANNEL, USERNAME, URL, IS_VERIFY, LANGUAGES, AUTH_CHANNEL, SUPPORT_GROUP, SEARCH_GROUP, QR_CODE, DELETE_TIME, PM_SEARCH, ADMINS
+from info import MAX_BTN, BIN_CHANNEL, USERNAME, URL, IS_VERIFY, LANGUAGES, AUTH_CHANNEL, SUPPORT_GROUP, SEARCH_GROUP, QR_CODE, DELETE_TIME, PM_SEARCH, ADMINS, LOG_CHANNEL
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, WebAppInfo 
 from pyrogram import Client, filters, enums
 from pyrogram.errors import MessageNotModified
@@ -364,6 +364,29 @@ async def cb_handler(client: Client, query: CallbackQuery):
             )
         )
 
+    elif query.data.startswith("stream"):
+        user_id = query.from_user.id
+        if not await db.has_premium_access(user_id):
+            d=await query.message.reply("💔Tʜɪs Fєαᴛᴜʀє Is Oɴʟʏ Fσʀ Bσᴛ Pʀєᴍɪᴜᴍ Usєʀs.\n\n Iғ Yσᴜ Wαɴᴛ Bσᴛ Sᴜʙᴄʀɪᴘᴛɪσɴ Tʜєɴ Sєɴᴅ /plan")
+            await asyncio.sleep(120)
+            await d.delete()
+            return
+        file_id = query.data.split('#', 1)[1]
+        NOBITA = await client.send_cached_media(
+            chat_id=BIN_CHANNEL,
+            file_id=file_id)
+        online = f"https://{URL}/watch/{NOBITA.id}?hash={get_hash(NOBITA)}"
+        download = f"https://{URL}/{NOBITA.id}?hash={get_hash(NOBITA)}"
+        btn= [[
+            InlineKeyboardButton("Wαᴛᴄʜ Oɴʟɪɴє", url=online),
+            InlineKeyboardButton("Fαsᴛ Dσᴡɴʟσαᴅ", url=download)
+        ],[
+            InlineKeyboardButton('🧿 Wαᴛᴄʜ Oɴ Tєʟєɢʀαᴍ 🖥', web_app=WebAppInfo(url=online))
+        ]]
+        await query.edit_message_reply_markup(
+            reply_markup=InlineKeyboardMarkup(btn)
+        )
+
     elif query.data == "buttons":
         await query.answer("Nσ Mσʀє Pαɢєs 😊", show_alert=True)
 
@@ -547,7 +570,7 @@ async def auto_filter(client, msg, spoll=False):
         files, offset, total_results = await get_search_results(search)
         if not files:
             if settings["spell_check"]:
-                return await advantage_spell_chok(msg)
+                return await advantage_spell_chok(client, msg)
             return
     else:
         settings = await get_settings(msg.message.chat.id)
@@ -723,7 +746,7 @@ async def auto_filter(client, msg, spoll=False):
                 except:
                     pass
 
-async def advantage_spell_chok(message):
+async def advantage_spell_chok(client, message):
     mv_id = message.id
     search = message.text
     chat_id = message.chat.id
@@ -756,6 +779,16 @@ async def advantage_spell_chok(message):
             await message.delete()
         except:
             pass
+        # Log no results and no corrections
+        user_info = f"User ID: {message.from_user.id}" + (f" (@{message.from_user.username})" if message.from_user.username else "")
+        log_msg = (
+            f"⚠️ **No Results Found**\n\n"
+            f"**Original Query:** `{search}`\n"
+            f"**Corrected Query:** `None`\n"
+            f"**User:** {user_info}\n"
+            f"**Action:** Advised to check Google. No selection made."
+        )
+        await client.send_message(LOG_CHANNEL, log_msg)
         return
     user = message.from_user.id if message.from_user else 0
     buttons = [[
@@ -773,3 +806,15 @@ async def advantage_spell_chok(message):
         await message.delete()
     except:
         pass
+    # Log no selection of suggested corrections
+    suggested_titles = [movie.get('title') for movie in movies]
+    corrected_queries = ", ".join(suggested_titles)
+    user_info = f"User ID: {message.from_user.id}" + (f" (@{message.from_user.username})" if message.from_user.username else "")
+    log_msg = (
+        f"⚠️ **No Results Found**\n\n"
+        f"**Original Query:** `{search}`\n"
+        f"**Suggested Corrections:** `{corrected_queries}`\n"
+        f"**User:** {user_info}\n"
+        f"**Action:** User didn't select any suggestions."
+    )
+    await client.send_message(LOG_CHANNEL, log_msg)
