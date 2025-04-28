@@ -789,6 +789,7 @@ async def auto_filter(client, msg, spoll=False):
                 except:
                     pass
 
+# Modify the advantage_spell_chok function (around line 656)
 async def advantage_spell_chok(message):
     mv_id = message.id
     search = message.text
@@ -821,36 +822,42 @@ async def advantage_spell_chok(message):
         try:
             await message.delete()
         except:
-            pass
         return
+
     user = message.from_user.id if message.from_user else 0
     buttons = [[
-        InlineKeyboardButton(
-            text=movie.get('title'), 
-            callback_data=f"spol#{movie.movieID}#{user}#{search.replace(' ', '_')}"  # Added original query
-        )
-    ] for movie in movies]
+        InlineKeyboardButton(text=movie.get('title'), callback_data=f"spol#{movie.movieID}#{user}#{search.replace(' ', '_')}")
+    ]
+        for movie in movies
+    ]
     buttons.append(
-        [InlineKeyboardButton("✠ Cʟσsє ✠", callback_data=f'close_spell#{search.replace(" ", "_")}')]
-    )
-    d = await message.reply_text(
-        text=script.CUDNT_FND.format(message.from_user.mention), 
-        reply_markup=InlineKeyboardMarkup(buttons),
-        reply_to_message_id=message.id
+        [InlineKeyboardButton(text="✠ Cʟσsє ✠", callback_data=f'close_spell#{search.replace(" ", "_")}')]
     )
     
-    await asyncio.sleep(120)
-    await d.delete()
-    user_info = f"ID: {message.from_user.id}"
-    if message.from_user.username:
-        user_info += f" (@{message.from_user.username})"
-    
-    log_msg = (f"⚠️ **No Results - Suggestions Ignored**\n\n"
-               f"Query: `{search}`\n"
-               f"User: {user_info}")
-    await message._client.send_message(LOG_CHANNEL, log_msg)
+    d = await message.reply_text(text=script.CUDNT_FND.format(message.from_user.mention), 
+                               reply_markup=InlineKeyboardMarkup(buttons),
+                               reply_to_message_id=message.id)
     
     try:
-        await message.delete()
-    except:
+        await asyncio.sleep(120)
+        # Only delete if message still exists
+        await d.delete()
+        
+        # Log only if message was deleted by timeout (not by user action)
+        user_info = f"ID: {message.from_user.id}"
+        if message.from_user.username:
+            user_info += f" (@{message.from_user.username})"
+        
+        log_msg = (f"⚠️ **No Results - Suggestions Ignored**\n\n"
+                   f"Query: `{search}`\n"
+                   f"User: {user_info}")
+        await message._client.send_message(LOG_CHANNEL, log_msg)
+        
+    except Exception as e:
+        # Message already deleted by user action, do nothing
         pass
+    finally:
+        try:
+            await message.delete()
+        except:
+            pass
