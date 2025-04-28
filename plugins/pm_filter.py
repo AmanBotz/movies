@@ -334,6 +334,23 @@ async def cb_handler(client: Client, query: CallbackQuery):
         except:
             pass
 
+    elif query.data.startswith("close_spell"):
+        _, search = query.data.split('#', 1)
+        user = query.from_user
+        user_info = f"ID: {user.id}" + (f" (@{user.username})" if user.username else "")
+        log_msg = (
+            f"⚠️ **No Result - Closed Suggestions**\n\n"
+            f"**Query:** `{search}`\n"
+            f"**Selected:** `None`\n"
+            f"**User:** {user_info}"
+        )
+        await client.send_message(LOG_CHANNEL, log_msg)
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except:
+            pass
+
     elif query.data.startswith("checksub"):
         ident, file_id = query.data.split("#")
         settings = await get_settings(query.message.chat.id)
@@ -779,42 +796,38 @@ async def advantage_spell_chok(client, message):
             await message.delete()
         except:
             pass
-        # Log no results and no corrections
-        user_info = f"User ID: {message.from_user.id}" + (f" (@{message.from_user.username})" if message.from_user.username else "")
+        user_info = f"ID: {message.from_user.id}" + (f" (@{message.from_user.username})" if message.from_user.username else "")
         log_msg = (
-            f"⚠️ **No Results Found**\n\n"
-            f"**Original Query:** `{search}`\n"
-            f"**Corrected Query:** `None`\n"
-            f"**User:** {user_info}\n"
-            f"**Action:** Advised to check Google. No selection made."
+            f"⚠️ **No Result - No Corrections**\n\n"
+            f"**Query:** `{search}`\n"
+            f"**Selected:** `None`\n"
+            f"**User:** {user_info}"
         )
         await client.send_message(LOG_CHANNEL, log_msg)
         return
     user = message.from_user.id if message.from_user else 0
-    buttons = [[
-        InlineKeyboardButton(text=movie.get('title'), callback_data=f"spol#{movie.movieID}#{user}")
-    ]
+    buttons = [
+        [InlineKeyboardButton(text=movie.get('title'), callback_data=f"spol#{movie.movieID}#{user}")]
         for movie in movies
     ]
-    buttons.append(
-        [InlineKeyboardButton(text="✠ Cʟσsє ✠", callback_data='close_data')]
+    buttons.append([InlineKeyboardButton("✠ Cʟσsє ✠", callback_data=f'close_spell#{search}')])
+
+    d = await message.reply_text(
+        text=script.CUDNT_FND.format(message.from_user.mention),
+        reply_markup=InlineKeyboardMarkup(buttons),
+        reply_to_message_id=message.id
     )
-    d = await message.reply_text(text=script.CUDNT_FND.format(message.from_user.mention), reply_markup=InlineKeyboardMarkup(buttons), reply_to_message_id=message.id)
     await asyncio.sleep(120)
     await d.delete()
     try:
         await message.delete()
     except:
         pass
-    # Log no selection of suggested corrections
-    suggested_titles = [movie.get('title') for movie in movies]
-    corrected_queries = ", ".join(suggested_titles)
-    user_info = f"User ID: {message.from_user.id}" + (f" (@{message.from_user.username})" if message.from_user.username else "")
+    user_info = f"ID: {message.from_user.id}" + (f" (@{message.from_user.username})" if message.from_user.username else "")
     log_msg = (
-        f"⚠️ **No Results Found**\n\n"
-        f"**Original Query:** `{search}`\n"
-        f"**Suggested Corrections:** `{corrected_queries}`\n"
-        f"**User:** {user_info}\n"
-        f"**Action:** User didn't select any suggestions."
+        f"⚠️ **No Result - Suggestions Ignored**\n\n"
+        f"**Query:** `{search}`\n"
+        f"**Selected:** `None`\n"
+        f"**User:** {user_info}"
     )
     await client.send_message(LOG_CHANNEL, log_msg)
