@@ -299,11 +299,27 @@ async def lang_next_page(bot, query):
 
 @Client.on_callback_query(filters.regex(r"^spol"))
 async def advantage_spoll_choker(bot, query):
-    _, id, user = query.data.split('#')
-    if int(user) != 0 and query.from_user.id != int(user):
+    _, movie_id, user_id, original_query = query.data.split("#")
+    if int(user_id) != 0 and query.from_user.id != int(user_id):
         return await query.answer(script.ALRT_TXT, show_alert=True)
-    movie = await get_poster(id, id=True)
+    
+    movie = await get_poster(movie_id, id=True)
     search = movie.get('title')
+    original_query = original_query.replace('_', ' ')
+    
+    # Log the selected query attempt
+    user_info = f"ID: {query.from_user.id}"
+    if query.from_user.username:
+        user_info += f" (@{query.from_user.username})"
+    
+    # Perform the search with selected query
+    files, _, _ = await get_search_results(search)
+    if not files:
+        log_msg = (f"⚠️ **No Results - Selected Query**\n\n"
+                   f"**Original Query:** `{original_query}`\n"
+                   f"**Selected Query:** `{search}`\n"
+                   f"**User:** {user_info}")
+        await bot.send_message(LOG_CHANNEL, log_msg)
     await query.answer('Cʜєcᴋɪɴɢ Iɴ Mʏ Dαᴛαʙαsє...')
     files, offset, total_results = await get_search_results(search)
     if files:
@@ -317,6 +333,26 @@ async def advantage_spoll_choker(bot, query):
             await query.message.reply_to_message.delete()
         except:
             pass
+
+@Client.on_callback_query(filters.regex(r"^close_spell"))
+async def close_spell_check(client, query):
+    _, search = query.data.split("#")
+    search = search.replace('_', ' ')
+    
+    user_info = f"ID: {query.from_user.id}"
+    if query.from_user.username:
+        user_info += f" (@{query.from_user.username})"
+    
+    log_msg = (f"⚠️ **No Results - Closed Suggestions**\n\n"
+               f"**Query:** `{search}`\n"
+               f"**User:** {user_info}")
+    await client.send_message(LOG_CHANNEL, log_msg)
+    
+    await query.message.delete()
+    try:
+        await query.message.reply_to_message.delete()
+    except:
+        pass
 
 @Client.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
@@ -585,10 +621,20 @@ async def auto_filter(client, msg, spoll=False):
         chat_id = message.chat.id
         settings = await get_settings(chat_id)
         files, offset, total_results = await get_search_results(search)
-        if not files:
-            if settings["spell_check"]:
-                return await advantage_spell_chok(client, msg)
-            return
+    if not files:
+        if settings["spell_check"]:
+            return await advantage_spell_chok(client, msg)
+        else:
+            # Log direct no results without suggestions
+            user_info = f"ID: {msg.from_user.id}"
+            if msg.from_user.username:
+                user_info += f" (@{msg.from_user.username})"
+            
+            log_msg = (f"⚠️ **No Results - Direct Query**\n\n"
+                       f"**Query:** `{search}`\n"
+                       f"**User:** {user_info}")
+            await client.send_message(LOG_CHANNEL, log_msg)
+        return
     else:
         settings = await get_settings(msg.message.chat.id)
         message = msg.message.reply_to_message  # msg will be callback query
@@ -764,7 +810,6 @@ async def auto_filter(client, msg, spoll=False):
                     pass
 
 async def advantage_spell_chok(client, message):
-    mv_id = message.id
     search = message.text
     chat_id = message.chat.id
     settings = await get_settings(chat_id)
@@ -805,12 +850,15 @@ async def advantage_spell_chok(client, message):
         )
         await client.send_message(LOG_CHANNEL, log_msg)
         return
-    user = message.from_user.id if message.from_user else 0
-    buttons = [
-        [InlineKeyboardButton(text=movie.get('title'), callback_data=f"spol#{movie.movieID}#{user}")]
-        for movie in movies
-    ]
-    buttons.append([InlineKeyboardButton("✠ Cʟσsє ✠", callback_data=f'close_spell#{search}')])
+    user_id = message.from_user.id
+    buttons = [[
+        InlineKeyboardButton(
+            text=movie.get('title'), 
+            callback_data=f"spol#{movie.movieID}#{user_id}#{search.replace(' ', '_')}"
+        )
+    ] for movie in movies]
+    buttons.append([InlineKeyboardButton("✠ Cʟσsє ✠", 
+                   callback_data=f"close_spell#{search.replace(' ', '_')}")])
 
     d = await message.reply_text(
         text=script.CUDNT_FND.format(message.from_user.mention),
