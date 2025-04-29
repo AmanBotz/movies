@@ -9,18 +9,25 @@ from info import MAX_BTN, BIN_CHANNEL, USERNAME, URL, IS_VERIFY, LANGUAGES, AUTH
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, WebAppInfo 
 from pyrogram import Client, filters, enums
 from pyrogram.errors import MessageNotModified
-from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, get_poster, get_status, get_readable_time, get_shortlink, is_req_subscribed
+from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, get_poster, get_readable_time, is_req_subscribed
 from database.users_chats_db import db
 from database.ia_filterdb import Media, get_search_results, get_bad_files, get_file_details
 
 lock = asyncio.Lock()
-
 logger = logging.getLogger(__name__)
 
 BUTTONS = {}
 FILES_ID = {}
 CAP = {}
 
+async def log_to_channel(client, text: str):
+    """
+    Send a log message to the configured LOG_CHANNEL.
+    """
+    try:
+        await client.send_message(LOG_CHANNEL, text)
+    except Exception as e:
+        logger.error(f"Failed to log to channel: {e}")
 
 @Client.on_message(filters.private & filters.text & filters.incoming)
 async def pm_search(client, message):
@@ -299,39 +306,19 @@ async def lang_next_page(bot, query):
 
 @Client.on_callback_query(filters.regex(r"^spol"))
 async def advantage_spoll_choker(bot, query):
-    _, id, user, orig_query = query.data.split('#')
-    orig_query = orig_query.replace('_', ' ')
+    _, mid, user = query.data.split('#')
     if int(user) != 0 and query.from_user.id != int(user):
         return await query.answer(script.ALRT_TXT, show_alert=True)
-    
-    movie = await get_poster(id, id=True)
+    movie = await get_poster(mid, id=True)
     search = movie.get('title')
-    
-    try:
-        await query.message.delete()
-    except Exception as e:
-        logger.error(f"Error deleting suggestion message: {e}")
-    
-    user_info = f"ID: {query.from_user.id}"
-    if query.from_user.username:
-        user_info += f" (@{query.from_user.username})"
     await query.answer('Cʜєcᴋɪɴɢ Iɴ Mʏ Dαᴛαʙαsє...')
     files, offset, total_results = await get_search_results(search)
-    
     if not files:
-        log_msg = (f"⚠️ **No Results - Selected Suggestion**\n\n"
-                   f"Original Query: `{orig_query}`\n"
-                   f"Selected Query: `{search}`\n"
-                   f"User: {user_info}")
-        await bot.send_message(LOG_CHANNEL, log_msg)
-        k = await query.message.reply_to_message.reply(script.NO_RESULT_TXT)
-        await asyncio.sleep(60)
-        await k.delete()
-        return
-    
-    k = (search, files, offset, total_results)
-    await auto_filter(bot, query, k)
-    else:
+        # Log no results after suggestion
+        user_obj = query.from_user
+        uid = user_obj.id
+        uname = f"@{user_obj.username}" if user_obj.username else "<no username>"
+        await log_to_channel(bot, f"[NO_RESULT_AFTER_SUGGESTION] User {uid} {uname} Suggestion: {search}")
         k = await query.message.edit(script.NO_RESULT_TXT)
         await asyncio.sleep(60)
         await k.delete()
@@ -339,42 +326,31 @@ async def advantage_spoll_choker(bot, query):
             await query.message.reply_to_message.delete()
         except:
             pass
+        return
+    # successful suggestion, proceed to auto_filter
+    await auto_filter(bot, query, (search, files, offset, total_results))
 
-@Client.on_callback_query(filters.regex(r"^close_spell"))
-async def close_spell_suggestions(client, query):
-    _, search = query.data.split('#')
-    search = search.replace('_', ' ')
-    
-    user_info = f"ID: {query.from_user.id}"
-    if query.from_user.username:
-        user_info += f" (@{query.from_user.username})"
-    
-    log_msg = (f"⚠️ **No Results - Closed Suggestions**\n\n"
-               f"Query: `{search}`\n"
-               f"User: {user_info}")
-        await client.send_message(LOG_CHANNEL, log_msg)
-    
-        await query.message.delete()
+@Client.on_callback_query(filters.regex(r"^close_data$"))
+async def handle_close_suggestion(client, query):
+    user = query.from_user
+    uid = user.id
+    uname = f"@{user.username}" if user.username else "<no username>"
+    # Log that the user closed suggestions
+    await log_to_channel(client, f"[CLOSED_SUGGESTION] User {uid} {uname}")
+
+    # original close logic
+    try:
+        original_user = query.message.reply_to_message.from_user.id
+    except:
+        original_user = query.from_user.id
+    if int(original_user) != 0 and query.from_user.id != int(original_user):
+        return await query.answer(script.ALRT_TXT, show_alert=True)
+    await query.answer("Tʜαɴᴋs Fσʀ Cʟσsє")
+    await query.message.delete()
     try:
         await query.message.reply_to_message.delete()
     except:
         pass
-
-@Client.on_callback_query()
-async def cb_handler(client: Client, query: CallbackQuery):
-    if query.data == "close_data":
-        try:
-            user = query.message.reply_to_message.from_user.id
-        except:
-            user = query.from_user.id
-        if int(user) != 0 and query.from_user.id != int(user):
-            return await query.answer(script.ALRT_TXT, show_alert=True)
-        await query.answer("Tʜαɴᴋs Fσʀ Cʟσsє")
-        await query.message.delete()
-        try:
-            await query.message.reply_to_message.delete()
-        except:
-            pass
 
     elif query.data.startswith("checksub"):
         ident, file_id = query.data.split("#")
@@ -607,28 +583,20 @@ async def auto_filter(client, msg, spoll=False):
     if not spoll:
         message = msg
         search = message.text
-        chat_id = message.chat.id
-        settings = await get_settings(chat_id)
+        settings = await get_settings(message.chat.id)
         files, offset, total_results = await get_search_results(search)
-        
-        # Add direct query logging
-        if not files and not settings["spell_check"]:
-            user_info = f"ID: {message.from_user.id}"
-            if message.from_user.username:
-                user_info += f" (@{message.from_user.username})"
-            
-            log_msg = (f"⚠️ **No Results - Direct Query**\n\n"
-                       f"Query: `{search}`\n"
-                       f"User: {user_info}")
-            await client.send_message(LOG_CHANNEL, log_msg)
-        
         if not files:
-            if settings["spell_check"]:
-                return await advantage_spell_chok(msg)
+            # Log initial no results
+            user = message.from_user
+            uid = user.id if user else 0
+            uname = f"@{user.username}" if user and user.username else "<no username>"
+            await log_to_channel(client, f"[NO_RESULT] User {uid} {uname} Query: {search}")
+            if settings.get("spell_check", False):
+                return await advantage_spell_chok(message)
             return
     else:
-        settings = await get_settings(msg.message.chat.id)
-        message = msg.message.reply_to_message  # msg will be callback query
+        # spoll pass-through
+        message = msg.message
         search, files, offset, total_results = spoll
     grp_id = message.chat.id
     req = message.from_user.id if message.from_user else 0
@@ -834,39 +802,20 @@ async def advantage_spell_chok(message):
         except:
             pass
         return
-
     user = message.from_user.id if message.from_user else 0
     buttons = [[
-        InlineKeyboardButton(
-            text=movie.get('title'), 
-            callback_data=f"spol#{movie.movieID}#{user}#{search.replace(' ', '_')}"
-        )
+        InlineKeyboardButton(text=movie.get('title'), callback_data=f"spol#{movie.movieID}#{message.from_user.id}")
     ] for movie in movies]
-    
-    buttons.append(
-        [InlineKeyboardButton("✠ Cʟσsє ✠", callback_data=f'close_spell#{search.replace(" ", "_")}')]
-    )
-    
-    d = await message.reply_text(text=script.CUDNT_FND.format(message.from_user.mention), 
-                               reply_markup=InlineKeyboardMarkup(buttons),
-                               reply_to_message_id=message.id)
+    buttons.append([InlineKeyboardButton(text="✠ Cʟσsє ✠", callback_data='close_data')])
+    d = await message.reply_text(text=script.CUDNT_FND.format(message.from_user.mention), reply_markup=InlineKeyboardMarkup(buttons), reply_to_message_id=message.id)
+    await asyncio.sleep(120)
+    user = message.from_user
+    uid = user.id
+    uname = f"@{user.username}" if user.username else "<no username>"
+    await log_to_channel(message._client, f"[IGNORED_SUGGESTION] User {uid} {uname} Original query: {search}")
+    await d.delete()
     try:
-        await asyncio.sleep(120)
-        await d.delete()
-        
-        user_info = f"ID: {message.from_user.id}"
-        if message.from_user.username:
-            user_info += f" (@{message.from_user.username})"
-        
-        log_msg = (f"⚠️ **No Results - Suggestions Ignored**\n\n"
-                   f"Query: `{search}`\n"
-                   f"User: {user_info}")
-        await message._client.send_message(LOG_CHANNEL, log_msg)
-        
-    except Exception as e:
+        await message.delete()
+    except:
         pass
-    finally:  # Fix indentation here
-        try:
-            await message.delete()
-        except:
-            pass
+    return
