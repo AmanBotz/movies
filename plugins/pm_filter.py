@@ -355,10 +355,10 @@ async def close_spell_suggestions(client, query):
         await client.send_message(LOG_CHANNEL, log_msg)
     
         await query.message.delete()
-        try:
-            await query.message.reply_to_message.delete()
-        except:
-            pass
+    try:
+        await query.message.reply_to_message.delete()
+    except:
+        pass
 
 @Client.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
@@ -850,7 +850,6 @@ async def advantage_spell_chok(message):
     d = await message.reply_text(text=script.CUDNT_FND.format(message.from_user.mention), 
                                reply_markup=InlineKeyboardMarkup(buttons),
                                reply_to_message_id=message.id)
-    
     try:
         await asyncio.sleep(120)
         await d.delete()
@@ -866,7 +865,7 @@ async def advantage_spell_chok(message):
         
     except Exception as e:
         pass
-    finally:
+    finally:  # Fix indentation here
         try:
             await message.delete()
         except:
