@@ -352,13 +352,13 @@ async def close_spell_suggestions(client, query):
     log_msg = (f"⚠️ **No Results - Closed Suggestions**\n\n"
                f"Query: `{search}`\n"
                f"User: {user_info}")
-    await client.send_message(LOG_CHANNEL, log_msg)
+        await client.send_message(LOG_CHANNEL, log_msg)
     
-    await query.message.delete()
-    try:
-        await query.message.reply_to_message.delete()
-    except:
-        pass
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except:
+            pass
 
 @Client.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
