@@ -583,7 +583,7 @@ async def auto_filter(client, msg, spoll=False):
                 await client.send_message(LOG_CHANNEL, log_text)
             except Exception as e:
                 logger.error(f"Error sending log to LOG_CHANNEL: {e}")
-        return await advantage_spell_chok(msg) if settings["spell_check"] else None
+            return await advantage_spell_chok(msg) if settings["spell_check"] else None
             return
     else:
         settings = await get_settings(msg.message.chat.id)
