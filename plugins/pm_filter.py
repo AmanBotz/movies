@@ -299,28 +299,38 @@ async def lang_next_page(bot, query):
 
 @Client.on_callback_query(filters.regex(r"^spol"))
 async def advantage_spoll_choker(bot, query):
-    _, id, user, orig_query = query.data.split('#')  # Modified to include original query
+    _, id, user, orig_query = query.data.split('#')
     orig_query = orig_query.replace('_', ' ')
     if int(user) != 0 and query.from_user.id != int(user):
         return await query.answer(script.ALRT_TXT, show_alert=True)
     
     movie = await get_poster(id, id=True)
     search = movie.get('title')
+    
+    try:
+        await query.message.delete()
+    except Exception as e:
+        logger.error(f"Error deleting suggestion message: {e}")
+    
     user_info = f"ID: {query.from_user.id}"
     if query.from_user.username:
         user_info += f" (@{query.from_user.username})"
     await query.answer('Cʜєcᴋɪɴɢ Iɴ Mʏ Dαᴛαʙαsє...')
     files, offset, total_results = await get_search_results(search)
+    
     if not files:
         log_msg = (f"⚠️ **No Results - Selected Suggestion**\n\n"
                    f"Original Query: `{orig_query}`\n"
                    f"Selected Query: `{search}`\n"
                    f"User: {user_info}")
         await bot.send_message(LOG_CHANNEL, log_msg)
+        k = await query.message.reply_to_message.reply(script.NO_RESULT_TXT)
+        await asyncio.sleep(60)
+        await k.delete()
+        return
     
-    if files:
-        k = (search, files, offset, total_results)
-        await auto_filter(bot, query, k)
+    k = (search, files, offset, total_results)
+    await auto_filter(bot, query, k)
     else:
         k = await query.message.edit(script.NO_RESULT_TXT)
         await asyncio.sleep(60)
@@ -335,7 +345,6 @@ async def close_spell_suggestions(client, query):
     _, search = query.data.split('#')
     search = search.replace('_', ' ')
     
-    # Logging user info
     user_info = f"ID: {query.from_user.id}"
     if query.from_user.username:
         user_info += f" (@{query.from_user.username})"
@@ -601,6 +610,8 @@ async def auto_filter(client, msg, spoll=False):
         chat_id = message.chat.id
         settings = await get_settings(chat_id)
         files, offset, total_results = await get_search_results(search)
+        
+        # Add direct query logging
         if not files and not settings["spell_check"]:
             user_info = f"ID: {message.from_user.id}"
             if message.from_user.username:
@@ -789,7 +800,6 @@ async def auto_filter(client, msg, spoll=False):
                 except:
                     pass
 
-# Modify the advantage_spell_chok function (around line 656)
 async def advantage_spell_chok(message):
     mv_id = message.id
     search = message.text
@@ -822,16 +832,19 @@ async def advantage_spell_chok(message):
         try:
             await message.delete()
         except:
+            pass
         return
 
     user = message.from_user.id if message.from_user else 0
     buttons = [[
-        InlineKeyboardButton(text=movie.get('title'), callback_data=f"spol#{movie.movieID}#{user}#{search.replace(' ', '_')}")
-    ]
-        for movie in movies
-    ]
+        InlineKeyboardButton(
+            text=movie.get('title'), 
+            callback_data=f"spol#{movie.movieID}#{user}#{search.replace(' ', '_')}"
+        )
+    ] for movie in movies]
+    
     buttons.append(
-        [InlineKeyboardButton(text="✠ Cʟσsє ✠", callback_data=f'close_spell#{search.replace(" ", "_")}')]
+        [InlineKeyboardButton("✠ Cʟσsє ✠", callback_data=f'close_spell#{search.replace(" ", "_")}')]
     )
     
     d = await message.reply_text(text=script.CUDNT_FND.format(message.from_user.mention), 
@@ -840,10 +853,8 @@ async def advantage_spell_chok(message):
     
     try:
         await asyncio.sleep(120)
-        # Only delete if message still exists
         await d.delete()
         
-        # Log only if message was deleted by timeout (not by user action)
         user_info = f"ID: {message.from_user.id}"
         if message.from_user.username:
             user_info += f" (@{message.from_user.username})"
@@ -854,7 +865,6 @@ async def advantage_spell_chok(message):
         await message._client.send_message(LOG_CHANNEL, log_msg)
         
     except Exception as e:
-        # Message already deleted by user action, do nothing
         pass
     finally:
         try:
