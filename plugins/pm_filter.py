@@ -300,15 +300,12 @@ async def lang_next_page(bot, query):
 @Client.on_callback_query(filters.regex(r"^spol"))
 async def advantage_spoll_choker(bot, query):
     _, movie_id, user = query.data.split('#')
-    # Only the original requester may press the button
     if int(user) != 0 and query.from_user.id != int(user):
         return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
 
-    # Get the movie title the user selected
     movie = await get_poster(movie_id, id=True)
     selected_query = movie.get('title')
 
-    # Original text they sent that triggered the spell‐check suggestions
     orig_msg = query.message.reply_to_message
     original_query = orig_msg.text if orig_msg else "<unknown>"
 
@@ -321,26 +318,22 @@ async def advantage_spoll_choker(bot, query):
         await auto_filter(bot, query, k)
 
     else:
-        # — NEW LOGGING SNIPPET —
         user_obj = query.from_user
         user_id  = user_obj.id
         username = f"@{user_obj.username}" if user_obj.username else user_obj.first_name
 
         log_text = (
-            f"🔍 No results for suggestion\n"
-            f"• User: {username} (`{user_id}`)\n"
-            f"• Original query: `{original_query}`\n"
-            f"• Selected suggestion: `{selected_query}`\n"
-            f"• Suggestion ID: `{movie_id}`"
+            f"🔍 Nσ Rєsᴜʟᴛ\n"
+            f"• Usєʀ: {username} (`{user_id}`)\n"
+            f"• Oʀɪɢɪɴαʟ Sєαʀᴄʜ: `{original_query}`\n"
+            f"• Cσʀʀᴇᴄᴛєᴅ Sєαʀᴄʜ: `{selected_query}`"
         )
 
         await bot.send_message(
             LOG_CHANNEL,
             log_text
         )
-        # — end logging —
 
-        # Inform the user
         k = await query.message.edit(script.NO_RESULT_TXT)
         await asyncio.sleep(60)
         await k.delete()
