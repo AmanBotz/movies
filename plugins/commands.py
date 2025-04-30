@@ -187,11 +187,15 @@ async def start(client:Client, message):
                 file_size = get_size(file.file_size),
                 file_caption=file.caption
             )
+            btn=[[
+                InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file.file_id}')
+            ]]
             dlt=await client.send_cached_media(
                 chat_id=message.from_user.id,
                 file_id=file.file_id,
                 caption=f_caption,
                 protect_content=settings['file_secure'],
+                reply_markup=InlineKeyboardMarkup(btn)
             )
             all_files.append(dlt)
         await asyncio.sleep(600)
@@ -215,11 +219,15 @@ async def start(client:Client, message):
         file_size = get_size(files.file_size),
         file_caption=files.caption
     )
+    btn = [[
+        InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file_id}')
+    ]]
     d=await client.send_cached_media(
         chat_id=message.from_user.id,
         file_id=file_id,
         caption=f_caption,
         protect_content=settings['file_secure'],
+        reply_markup=InlineKeyboardMarkup(btn)
     )
     await asyncio.sleep(600)
     await d.delete()
