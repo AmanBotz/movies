@@ -568,22 +568,10 @@ async def auto_filter(client, msg, spoll=False):
         chat_id = message.chat.id
         settings = await get_settings(chat_id)
         files, offset, total_results = await get_search_results(search)
-    if not files:
-        # Log no results when spell check is off
-        if not settings["spell_check"]:
-            user = msg.from_user  # msg is the message object
-            log_text = (
-                f"🚫 **No Results Found**\n\n"
-                f"**Query:** `{search}`\n"
-                f"**User ID:** `{user.id}`\n"
-                f"**Username:** @{user.username}" if user.username else
-                f"**Name:** {user.first_name}"
-            )
-            try:
-                await client.send_message(LOG_CHANNEL, log_text)
-            except Exception as e:
-                logger.error(f"Error sending log to LOG_CHANNEL: {e}")
-            return await advantage_spell_chok(msg) if settings["spell_check"] else None
+        if not files:
+            if settings["spell_check"]:
+                return await advantage_spell_chok(msg)
+                await log_no_result(message, search)  # Add this line
             return
     else:
         settings = await get_settings(msg.message.chat.id)
@@ -781,18 +769,7 @@ async def advantage_spell_chok(message):
             pass
         return
     if not movies:
-        user = msg.from_user
-        log_text = (
-            f"🚫 **No Results Found**\n\n"
-            f"**Query:** `{search}`\n"
-            f"**User ID:** `{user.id}`\n"
-            f"**Username:** @{user.username}" if user.username else
-            f"**Name:** {user.first_name}"
-        )
-        try:
-            await client.send_message(LOG_CHANNEL, log_text)
-        except Exception as e:
-            logger.error(f"Error sending log to LOG_CHANNEL: {e}")
+        await log_no_result(message, search)
         google = search.replace(" ", "+")
         button = [[
             InlineKeyboardButton("🔍 Cʜєᴄᴋ Sᴘєʟʟɪɴɢ Oɴ Gσσɢʟє ", url=f"https://www.google.com/search?q={google}")
@@ -821,3 +798,27 @@ async def advantage_spell_chok(message):
         await message.delete()
     except:
         pass
+
+async def log_no_result(message, query):
+    user_id = message.from_user.id if message.from_user else None
+    username = message.from_user.username if message.from_user else None
+    chat_type = "PM" if message.chat.type == "private" else f"Group: {message.chat.title} ({message.chat.id})"
+    
+    log_text = f"""
+╔════❰ 𝗡𝗢 𝗥𝗘𝗦𝗨𝗟𝗧 𝗟𝗢𝗚 ❱═❍
+║╭━━━━━━━━━━━━━━━━➣
+║┣⪼**Query:** `{query}`
+║┣⪼**User ID:** `{user_id}`
+║┣⪼**Username:** @{username if username else 'N/A'}
+║┣⪼**Chat Type:** {chat_type}
+║╰━━━━━━━━━━━━━━━━➣
+╚══════════════════❍"""
+    
+    try:
+        await client.send_message(
+            chat_id=LOG_CHANNEL,
+            text=log_text,
+            parse_mode=enums.ParseMode.MARKDOWN
+        )
+    except Exception as e:
+        logger.error(f"Failed to log no result: {e}")
