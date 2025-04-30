@@ -5,7 +5,7 @@ import math
 import logging
 from pyrogram.errors.exceptions.bad_request_400 import MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty
 from Script import script
-from info import MAX_BTN, BIN_CHANNEL, USERNAME, URL, IS_VERIFY, LANGUAGES, AUTH_CHANNEL, SUPPORT_GROUP, SEARCH_GROUP, QR_CODE, DELETE_TIME, PM_SEARCH, ADMINS, LOG_CHANNEL
+from info import MAX_BTN, BIN_CHANNEL, USERNAME, URL, IS_VERIFY, LANGUAGES, AUTH_CHANNEL, SUPPORT_GROUP, SEARCH_GROUP, QR_CODE, DELETE_TIME, PM_SEARCH, ADMINS
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, WebAppInfo 
 from pyrogram import Client, filters, enums
 from pyrogram.errors import MessageNotModified
@@ -773,24 +773,6 @@ async def advantage_spell_chok(message):
             InlineKeyboardButton("🔍 Cʜєᴄᴋ Sᴘєʟʟɪɴɢ Oɴ Gσσɢʟє ", url=f"https://www.google.com/search?q={google}")
         ]]
         k = await message.reply_text(text=script.I_CUDNT.format(search), reply_markup=InlineKeyboardMarkup(button))
-        
-        # Add logging here
-        user_id = message.from_user.id
-        username = message.from_user.username if message.from_user.username else "N/A"
-        log_text = f"""
-🚫 **No Results After Spell Check**
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-**Query:** `{search}`
-**User ID:** `{user_id}`
-**Username:** @{username}
-**Chat:** {'Private' if message.chat.type == 'private' else f'Group: {message.chat.title}'}
-"""
-        await client.send_message(
-            chat_id=LOG_CHANNEL,
-            text=log_text,
-            parse_mode=enums.ParseMode.MARKDOWN
-        )
-        
         await asyncio.sleep(120)
         await k.delete()
         try:
