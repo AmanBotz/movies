@@ -571,7 +571,6 @@ async def auto_filter(client, msg, spoll=False):
         if not files:
             if settings["spell_check"]:
                 return await advantage_spell_chok(msg)
-                await log_no_result(message, search)  # Add this line
             return
     else:
         settings = await get_settings(msg.message.chat.id)
@@ -769,12 +768,29 @@ async def advantage_spell_chok(message):
             pass
         return
     if not movies:
-        await log_no_result(message, search)
         google = search.replace(" ", "+")
         button = [[
             InlineKeyboardButton("🔍 Cʜєᴄᴋ Sᴘєʟʟɪɴɢ Oɴ Gσσɢʟє ", url=f"https://www.google.com/search?q={google}")
         ]]
         k = await message.reply_text(text=script.I_CUDNT.format(search), reply_markup=InlineKeyboardMarkup(button))
+        
+        # Add logging here
+        user_id = message.from_user.id
+        username = message.from_user.username if message.from_user.username else "N/A"
+        log_text = f"""
+🚫 **No Results After Spell Check**
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+**Query:** `{search}`
+**User ID:** `{user_id}`
+**Username:** @{username}
+**Chat:** {'Private' if message.chat.type == 'private' else f'Group: {message.chat.title}'}
+"""
+        await client.send_message(
+            chat_id=LOG_CHANNEL,
+            text=log_text,
+            parse_mode=enums.ParseMode.MARKDOWN
+        )
+        
         await asyncio.sleep(120)
         await k.delete()
         try:
@@ -798,27 +814,3 @@ async def advantage_spell_chok(message):
         await message.delete()
     except:
         pass
-
-async def log_no_result(message, query):
-    user_id = message.from_user.id if message.from_user else None
-    username = message.from_user.username if message.from_user else None
-    chat_type = "PM" if message.chat.type == "private" else f"Group: {message.chat.title} ({message.chat.id})"
-    
-    log_text = f"""
-╔════❰ 𝗡𝗢 𝗥𝗘𝗦𝗨𝗟𝗧 𝗟𝗢𝗚 ❱═❍
-║╭━━━━━━━━━━━━━━━━➣
-║┣⪼**Query:** `{query}`
-║┣⪼**User ID:** `{user_id}`
-║┣⪼**Username:** @{username if username else 'N/A'}
-║┣⪼**Chat Type:** {chat_type}
-║╰━━━━━━━━━━━━━━━━➣
-╚══════════════════❍"""
-    
-    try:
-        await client.send_message(
-            chat_id=LOG_CHANNEL,
-            text=log_text,
-            parse_mode=enums.ParseMode.MARKDOWN
-        )
-    except Exception as e:
-        logger.error(f"Failed to log no result: {e}")
