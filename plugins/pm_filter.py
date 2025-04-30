@@ -5,7 +5,7 @@ import math
 import logging
 from pyrogram.errors.exceptions.bad_request_400 import MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty
 from Script import script
-from info import MAX_BTN, BIN_CHANNEL, USERNAME, URL, IS_VERIFY, LANGUAGES, AUTH_CHANNEL, SUPPORT_GROUP, SEARCH_GROUP, QR_CODE, DELETE_TIME, PM_SEARCH, ADMINS
+from info import MAX_BTN, BIN_CHANNEL, USERNAME, URL, IS_VERIFY, LANGUAGES, AUTH_CHANNEL, SUPPORT_GROUP, SEARCH_GROUP, QR_CODE, DELETE_TIME, PM_SEARCH, ADMINS, LOG_CHANNEL
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, WebAppInfo 
 from pyrogram import Client, filters, enums
 from pyrogram.errors import MessageNotModified
@@ -299,17 +299,34 @@ async def lang_next_page(bot, query):
 
 @Client.on_callback_query(filters.regex(r"^spol"))
 async def advantage_spoll_choker(bot, query):
-    _, id, user = query.data.split('#')
+    _, movie_id, user = query.data.split('#')
+    # only the original requester may press the button
     if int(user) != 0 and query.from_user.id != int(user):
-        return await query.answer(script.ALRT_TXT, show_alert=True)
-    movie = await get_poster(id, id=True)
+        return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
+
+    movie = await get_poster(movie_id, id=True)
     search = movie.get('title')
     await query.answer('Cʜєcᴋɪɴɢ Iɴ Mʏ Dαᴛαʙαsє...')
+
     files, offset, total_results = await get_search_results(search)
+
     if files:
         k = (search, files, offset, total_results)
         await auto_filter(bot, query, k)
     else:
+        # — NEW LOGGING SNIPPET —
+        user_obj = query.from_user
+        user_id  = user_obj.id
+        username = f"@{user_obj.username}" if user_obj.username else user_obj.first_name
+        await bot.send_message(
+            LOG_CHANNEL,
+            (
+                f"🔍 No results for suggestion\n"
+                f"• User: {username} (`{user_id}`)\n"
+                f"• Query: `{search}`\n"
+                f"• Suggestion ID: `{movie_id}`"
+            )
+        )
         k = await query.message.edit(script.NO_RESULT_TXT)
         await asyncio.sleep(60)
         await k.delete()
