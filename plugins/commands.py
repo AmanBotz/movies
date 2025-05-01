@@ -153,25 +153,24 @@ async def start(client:Client, message):
                 rahul = settings.get('tutorial_two', TUTORIAL2) if is_second_shortener else settings.get('tutorial', TUTORIAL)
             buttons = [[
                 InlineKeyboardButton(text="️☑️ Vєʀɪғʏ ☑️", url=verify),
-                InlineKeyboardButton(text="❗ Hσᴡ Tσ Vєʀɪғʏ ❓", url=rahul)
+                InlineKeyboardButton(text="❗ Hσᴡ Tσ Vєʀɪғʏ ❓", callback_data="how_to_verify")
             ]]
             reply_markup=InlineKeyboardMarkup(buttons)
             if await db.user_verified(user_id): 
                 msg = script.THIRDT_VERIFICATION_TEXT
             else:            
                 msg = script.SECOND_VERIFICATION_TEXT if is_second_shortener else script.VERIFICATION_TEXT
-            d = await m.reply_video(
-                video="https://t.me/haxoff/20",
-                caption=msg.format(message.from_user.mention, get_status()),
-                protect_content=True,
+            d = await m.reply_text(
+                text=msg.format(message.from_user.mention, get_status()),
+                protect_content = True,
                 reply_markup=reply_markup,
                 parse_mode=enums.ParseMode.HTML
-                )
+            )
             await asyncio.sleep(300) 
             await d.delete()
             await m.delete()
             return
-
+            
     if data.startswith("allfiles"):
         _, grp_id, key = data.split("_", 2)
         files = temp.FILES_ID.get(key)
@@ -809,3 +808,20 @@ async def donation(bot, message):
     await asyncio.sleep(300)
     await yt.delete()
     await message.delete()
+
+@Client.on_callback_query(filters.regex(r'^how_to_verify'))
+async def how_to_verify_video(client, callback_query):
+    try:
+        video_file_id = "https://t.me/haxoff/20"
+        
+        await callback_query.answer()
+        await client.send_video(
+            chat_id=callback_query.message.chat.id,
+            video=video_file_id,
+            caption="📽️ **Watch this video to learn how to verify:**",
+            protect_content=True,
+            reply_to_message_id=callback_query.message.id
+        )
+    except Exception as e:
+        await callback_query.answer(f"Error: {str(e)}", show_alert=True)
+        logger.error(f"How to Verify Error: {str(e)}")
