@@ -187,21 +187,17 @@ async def start(client:Client, message):
                 file_size = get_size(file.file_size),
                 file_caption=file.caption
             )
-            btn=[[
-                InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file.file_id}')
-            ]]
             dlt=await client.send_cached_media(
                 chat_id=message.from_user.id,
                 file_id=file.file_id,
                 caption=f_caption,
-                protect_content=settings['file_secure'],
-                reply_markup=InlineKeyboardMarkup(btn)
+                protect_content=settings['file_secure']
             )
             all_files.append(dlt)
         await asyncio.sleep(600)
         for dlt_file in all_files:
             await dlt_file.delete()
-        t=await client.send_message(message.from_user.id, "<b>⚠️ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛᴇᴅ ꜰɪʟᴇ ɪs ᴅᴇʟᴇᴛᴇᴅ ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪɴ ʙᴏᴛ, ɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ᴀɢᴀɪɴ ᴛʜᴇɴ sᴇᴀʀᴄʜ ᴀɢᴀɪɴ ☺️</b>")
+        t=await client.send_message(message.from_user.id, "<b>⚠️ Yσᴜʀ Rєǫᴜєsᴛєᴅ Fɪʟє Is Dєʟєᴛєᴅ Tσ Aᴠσɪᴅ Cσᴘʏʀɪɢʜᴛ Iɴ Bσᴛ, Iғ Yσᴜ Wαɴᴛ Fɪʟє Aɢαɪɴ Tʜєɴ Sєαʀᴄʜ Aɢαɪɴ ☺️</b>")
         await asyncio.sleep(120)
         await t.delete()
         return
@@ -219,19 +215,15 @@ async def start(client:Client, message):
         file_size = get_size(files.file_size),
         file_caption=files.caption
     )
-    btn = [[
-        InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 📥", callback_data=f'stream#{file_id}')
-    ]]
     d=await client.send_cached_media(
         chat_id=message.from_user.id,
         file_id=file_id,
         caption=f_caption,
-        protect_content=settings['file_secure'],
-        reply_markup=InlineKeyboardMarkup(btn)
+        protect_content=settings['file_secure']
     )
     await asyncio.sleep(600)
     await d.delete()
-    r = await message.reply_text("<b>⚠️ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛᴇᴅ ꜰɪʟᴇ ɪs ᴅᴇʟᴇᴛᴇᴅ ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ, ɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ᴀɢᴀɪɴ ᴛʜᴇɴ sᴇᴀʀᴄʜ ᴀɢᴀɪɴ ☺️</b>")
+    r = await message.reply_text("<b>⚠️ Yσᴜʀ Rєǫᴜєsᴛєᴅ Fɪʟє Is Dєʟєᴛєᴅ Tσ Aᴠσɪᴅ Cσᴘʏʀɪɢʜᴛ Iɴ Bσᴛ, Iғ Yσᴜ Wαɴᴛ Fɪʟє Aɢαɪɴ Tʜєɴ Sєαʀᴄʜ Aɢαɪɴ ☺️️</b>")
     await asyncio.sleep(120)
     await r.delete()
 
@@ -802,9 +794,9 @@ async def deletemultiplefiles(bot, message):
 @Client.on_message(filters.command("donate"))
 async def donation(bot, message):
     btn = [[
-        InlineKeyboardButton(text="❌   ᴄʟᴏsᴇ   ❌", callback_data="close_data")
+        InlineKeyboardButton(text="❌   Cʟσsє ❌", callback_data="close_data")
     ]]
-    yt=await message.reply_photo(photo='https://envs.sh/wam.jpg', caption=script.DONATE_TXT, reply_markup=InlineKeyboardMarkup(btn))
+    yt=await message.reply_photo(photo='https://envs.sh/4u6.jpg', caption=script.DONATE_TXT, reply_markup=InlineKeyboardMarkup(btn))
     await asyncio.sleep(300)
     await yt.delete()
     await message.delete()
@@ -815,9 +807,9 @@ async def how_to_verify(client, query):
     video_msg = await client.send_video(
         chat_id=query.message.chat.id,
         video="https://t.me/haxoff/20",
-        caption="📽️ Wαᴛᴄʜ Tʜɪs Vɪᴅєσ Tᴏ Lєαʀɴ Hσᴡ Tᴏ Vєʀɪғʏ",
+        caption="📽️ Wαᴛᴄʜ Tʜɪs Vɪᴅєσ Tᴏ Lєαʀɴ Hσᴡ Tᴏ Vєʀɪғʏ\n\n Tʜɪs Vɪᴅєσ Wɪʟʟ Bє Dєʟєᴛєᴅ Iɴ 5 Mɪɴᴜᴛєs.",
         protect_content=True,
         reply_to_message_id=query.message.id
     )
-    await asyncio.sleep(300)  # 5 minutes
+    await asyncio.sleep(300)
     await video_msg.delete()
