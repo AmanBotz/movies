@@ -806,8 +806,8 @@ async def how_to_verify(client, query):
     await query.answer()
     video_msg = await client.send_video(
         chat_id=query.message.chat.id,
-        video="https://t.me/haxoff/21",
-        caption="📽️ Wαᴛᴄʜ Tʜɪs Vɪᴅєσ Tᴏ Lєαʀɴ Hσᴡ Tᴏ Vєʀɪғʏ\n\n Tʜɪs Vɪᴅєσ Wɪʟʟ Bє Dєʟєᴛєᴅ Iɴ 5 Mɪɴᴜᴛєs.",
+        video="https://t.me/haxoffverify/2",
+        caption="📽️ Wαᴛᴄʜ Tʜɪs Vɪᴅєσ Tᴏ Lєαʀɴ Hσᴡ Tᴏ Vєʀɪғʏ.\n <blockquote> Tʜɪs Vɪᴅєσ Wɪʟʟ Bє Dєʟєᴛєᴅ Iɴ 5 Mɪɴᴜᴛєs.</blockquote>",
         protect_content=True,
         reply_to_message_id=query.message.id
     )
