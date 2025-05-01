@@ -160,17 +160,18 @@ async def start(client:Client, message):
                 msg = script.THIRDT_VERIFICATION_TEXT
             else:            
                 msg = script.SECOND_VERIFICATION_TEXT if is_second_shortener else script.VERIFICATION_TEXT
-            d = await m.reply_text(
-                text=msg.format(message.from_user.mention, get_status()),
-                protect_content = True,
+            d = await m.reply_video(
+                video="https://t.me/haxoff/20",
+                caption=msg.format(message.from_user.mention, get_status()),
+                protect_content=True,
                 reply_markup=reply_markup,
                 parse_mode=enums.ParseMode.HTML
-            )
+                )
             await asyncio.sleep(300) 
             await d.delete()
             await m.delete()
             return
-            
+
     if data.startswith("allfiles"):
         _, grp_id, key = data.split("_", 2)
         files = temp.FILES_ID.get(key)
