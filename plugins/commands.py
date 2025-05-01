@@ -809,19 +809,15 @@ async def donation(bot, message):
     await yt.delete()
     await message.delete()
 
-@Client.on_callback_query(filters.regex(r'^how_to_verify'))
-async def how_to_verify_video(client, callback_query):
-    try:
-        video_file_id = "https://t.me/haxoff/20"
-        
-        await callback_query.answer()
-        await client.send_video(
-            chat_id=callback_query.message.chat.id,
-            video=video_file_id,
-            caption="📽️ **Watch this video to learn how to verify:**",
-            protect_content=True,
-            reply_to_message_id=callback_query.message.id
-        )
-    except Exception as e:
-        await callback_query.answer(f"Error: {str(e)}", show_alert=True)
-        logger.error(f"How to Verify Error: {str(e)}")
+@Client.on_callback_query(filters.regex('how_to_verify'))
+async def how_to_verify(client, query):
+    await query.answer()
+    video_msg = await client.send_video(
+        chat_id=query.message.chat.id,
+        video="https://t.me/haxoff/20",
+        caption="📽️ Wαᴛᴄʜ Tʜɪs Vɪᴅєσ Tᴏ Lєαʀɴ Hσᴡ Tᴏ Vєʀɪғʏ",
+        protect_content=True,
+        reply_to_message_id=query.message.id
+    )
+    await asyncio.sleep(300)  # 5 minutes
+    await video_msg.delete()
