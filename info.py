@@ -18,31 +18,31 @@ def is_enabled(value, default):
         return default
 
 #main variables
-API_ID = int(environ.get('API_ID', '23288918'))
-API_HASH = environ.get('API_HASH', 'fd2b1b2e0e6b2addf6e8031f15e511f2')
+API_ID = int(environ.get('API_ID', ''))
+API_HASH = environ.get('API_HASH', '')
 BOT_TOKEN = environ.get('BOT_TOKEN', '')
-ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6400973182').split()]
-USERNAME = environ.get('USERNAME', 'https://telegram.me/haxoffchat')
-LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002208536233'))
-CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002463182766').split()]
+ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '7764533450').split()]
+USERNAME = environ.get('USERNAME', 'https://t.me/haxoffbot')
+LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002500378345'))
+CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002356707323').split()]
 DATABASE_URI = environ.get('DATABASE_URI', "")
 DATABASE_URI2 = environ.get('DATABASE_URI2', "")
-DATABASE_NAME = environ.get('DATABASE_NAME', "Selfie")
-COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Girl')
-LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-1002208536233'))
-QR_CODE = environ.get('QR_CODE', 'https://envs.sh/wam.jpg')
+DATABASE_NAME = environ.get('DATABASE_NAME', "Aman")
+COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Movies')
+LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-1002500378345'))
+QR_CODE = environ.get('QR_CODE', 'https://envs.sh/4u6.jpg')
 DELETE_CHANNELS = [int(dch) if id_pattern.search(dch) else dch for dch in environ.get('DELETE_CHANNELS', '0').split()]
 
 #this vars is for when heroku or koyeb acc get banned, then change this vars as your file to link bot name
-BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002208536233'))
+BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002500378345'))
 URL = environ.get('URL', '')
 
 # verify system vars
 IS_VERIFY = is_enabled('IS_VERIFY', True)
-LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '-1002208536233'))
-TUTORIAL = environ.get("TUTORIAL", "")
-TUTORIAL2 = environ.get("TUTORIAL2", "")
-TUTORIAL3 = environ.get("TUTORIAL3", "")
+LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '-1002562208871'))
+TUTORIAL = environ.get("TUTORIAL", "https://t.me/haxoffverify/2")
+TUTORIAL2 = environ.get("TUTORIAL2", "https://t.me/haxoffverify/2")
+TUTORIAL3 = environ.get("TUTORIAL3", "https://t.me/haxoffverify/2")
 VERIFY_IMG = environ.get("VERIFY_IMG", "https://envs.sh/4CH.jpg")
 SHORTENER_API = environ.get("SHORTENER_API", "f1faba7501e855860c6a94bc0d24e7b11f1e4560")
 SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "linkshortify.com")
@@ -56,10 +56,10 @@ THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "86400"))
 # languages search
 LANGUAGES = ["hindi", "english", "telugu", "tamil", "kannada", "malayalam"]
 
-auth_channel = environ.get('AUTH_CHANNEL', '-1002520206765')
+auth_channel = environ.get('AUTH_CHANNEL', '-1002548283647')
 AUTH_CHANNEL = int(auth_channel) if auth_channel and id_pattern.search(auth_channel) else None
-SUPPORT_GROUP = int(environ.get('SUPPORT_GROUP', '-1002621915858'))
-SEARCH_GROUP = environ.get('SEARCH_GROUP', 'https://t.me/+IjfAdDZbEoRiNjQ1')  # Replace with your movies search group link (not group id )
+SUPPORT_GROUP = int(environ.get('SUPPORT_GROUP', '-1002394846437'))
+SEARCH_GROUP = environ.get('SEARCH_GROUP', '-1002588055930')
 
 # bot settings
 AUTO_FILTER = is_enabled('AUTO_FILTER', True)
