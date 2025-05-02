@@ -194,7 +194,7 @@ async def start(client:Client, message):
                 protect_content=settings['file_secure']
             )
             all_files.append(dlt)
-        await asyncio.sleep(600)
+        await asyncio.sleep(120)
         for dlt_file in all_files:
             await dlt_file.delete()
         t=await client.send_message(message.from_user.id, "<b>⚠️ Yσᴜʀ Rєǫᴜєsᴛєᴅ Fɪʟє Is Dєʟєᴛєᴅ Tσ Aᴠσɪᴅ Cσᴘʏʀɪɢʜᴛ Iɴ Bσᴛ, Iғ Yσᴜ Wαɴᴛ Fɪʟє Aɢαɪɴ Tʜєɴ Sєαʀᴄʜ Aɢαɪɴ ☺️</b>")
@@ -221,7 +221,7 @@ async def start(client:Client, message):
         caption=f_caption,
         protect_content=settings['file_secure']
     )
-    await asyncio.sleep(600)
+    await asyncio.sleep(120)
     await d.delete()
     r = await message.reply_text("<b>⚠️ Yσᴜʀ Rєǫᴜєsᴛєᴅ Fɪʟє Is Dєʟєᴛєᴅ Tσ Aᴠσɪᴅ Cσᴘʏʀɪɢʜᴛ Iɴ Bσᴛ, Iғ Yσᴜ Wαɴᴛ Fɪʟє Aɢαɪɴ Tʜєɴ Sєαʀᴄʜ Aɢαɪɴ ☺️️</b>")
     await asyncio.sleep(120)
