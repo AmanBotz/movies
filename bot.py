@@ -27,9 +27,9 @@ from typing import Union, Optional, AsyncGenerator
 from utils import temp
 
 
-# --------------------------
+# -----------------------------
 # MongoDB setup for settings
-# --------------------------
+# -----------------------------
 _mongo_client = AsyncIOMotorClient(DATABASE_URI)
 _settings_coll = _mongo_client["autodeleter"]["settings"]
 
@@ -51,6 +51,9 @@ class Bot(Client):
         b_users, b_chats = await db.get_banned()
         temp.BANNED_USERS = b_users
         temp.BANNED_CHATS = b_chats
+
+        # record start time for logs
+        self._start_time = time.time()
 
         # start pyrogram client
         await super().start()
@@ -153,11 +156,15 @@ async def set_delay(c: Bot, m: types.Message):
 
 # -----------------------------------
 # Auto-delete other group messages
-# By default, no deletion unless /setdelay used
+# Only delete non-bot user messages, if /setdelay was used
 # -----------------------------------
 @app.on_message(filters.group & ~filters.service)
 async def delete_later(c: Bot, m: types.Message):
-    # fetch delay; if not set, skip deletion
+    # ignore messages from bots (including this bot)
+    if m.from_user is None or m.from_user.is_bot:
+        return
+
+    # fetch custom delay; if not set, skip deletion
     setting = await _settings_coll.find_one({"chat_id": m.chat.id})
     if not setting or "delay" not in setting:
         return
@@ -171,6 +178,4 @@ async def delete_later(c: Bot, m: types.Message):
 
 
 if __name__ == "__main__":
-    # record start time for logs
-    app._start_time = time.time()
     app.run()
