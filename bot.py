@@ -1,17 +1,16 @@
-from pyrogram import Client, __version__
+from pyrogram import Client, __version__, filters
 from database.ia_filterdb import Media
 from database.users_chats_db import db
-from info import API_ID, API_HASH, ADMINS, BOT_TOKEN, LOG_CHANNEL, PORT, SUPPORT_GROUP
+from info import API_ID, API_HASH, ADMINS, BOT_TOKEN, LOG_CHANNEL, PORT, SUPPORT_GROUP, URL
 from utils import temp
 from typing import Union, Optional, AsyncGenerator
 from pyrogram import types
 from datetime import date, datetime
 import asyncio
 import pytz
-from aiohttp import web
+from aiohttp import web, ClientSession
 from plugins import web_server, check_expired_premium
 import time
-from keep_alive import keep_alive
 
 class Bot(Client):
     def __init__(self):
@@ -39,6 +38,7 @@ class Bot(Client):
         temp.B_LINK = me.mention
         self.username = '@' + me.username
         self.loop.create_task(check_expired_premium(self))
+        self.loop.create_task(self.ping_server())  # Start ping task
         print(f"{me.first_name} is started now ❤️")
         tz = pytz.timezone('Asia/Kolkata')
         today = date.today()
@@ -54,7 +54,15 @@ class Bot(Client):
         seconds = int(tt)
         for admin in ADMINS:
             await self.send_message(chat_id=admin, text=f"<b>✅ ʙᴏᴛ ʀᴇsᴛᴀʀᴛᴇᴅ\n🕥 ᴛɪᴍᴇ ᴛᴀᴋᴇɴ - <code>{seconds} sᴇᴄᴏɴᴅs</code></b>")
-        self.loop.create_task(keep_alive())
+
+    async def ping_server(self):
+        async with ClientSession() as session:
+            while True:
+                try:
+                    await session.get(URL)
+                except Exception:
+                    pass
+                await asyncio.sleep(30)
 
     async def stop(self, *args):
         await super().stop()
@@ -75,6 +83,14 @@ class Bot(Client):
             for message in messages:
                 yield message
                 current += 1
+
+@app.on_message(filters.group & ~filters.service)
+async def auto_delete(client, message):
+    await asyncio.sleep(1)
+    try:
+        await message.delete()
+    except Exception:
+        pass
 
 app = Bot()
 app.run()
