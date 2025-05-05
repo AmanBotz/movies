@@ -19,7 +19,7 @@ from info import (
     LOG_CHANNEL,
     PORT,
     SUPPORT_GROUP,
-    MONGO_URI,
+    DATABASE_URI,
     URL as PING_URL,
 )
 from plugins import web_server, check_expired_premium
@@ -30,7 +30,7 @@ from utils import temp
 # --------------------------
 # MongoDB setup for settings
 # --------------------------
-_mongo_client = AsyncIOMotorClient(MONGO_URI)
+_mongo_client = AsyncIOMotorClient(DATABASE_URI)
 _settings_coll = _mongo_client["autodeleter"]["settings"]
 
 
