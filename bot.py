@@ -2,13 +2,11 @@ import asyncio
 import os
 import time
 from datetime import date, datetime
-
 import aiohttp
 import pytz
 from aiohttp import web
 from motor.motor_asyncio import AsyncIOMotorClient
 from pyrogram import Client, filters, enums, types
-
 from database.ia_filterdb import Media
 from database.users_chats_db import db
 from info import (
@@ -26,8 +24,8 @@ from plugins import web_server, check_expired_premium
 from typing import Union, Optional, AsyncGenerator
 from utils import temp
 
-_mongo_client = AsyncIOMotorClient(DATABASE_URI)
-_settings_coll = _mongo_client["autodeleter"]["settings"]
+_mongo = AsyncIOMotorClient(DATABASE_URI)
+_settings = _mongo["autodeleter"]["settings"]
 
 class Bot(Client):
     def __init__(self):
@@ -54,44 +52,43 @@ class Bot(Client):
         temp.B_LINK = me.mention
         self.username = "@" + me.username
         self.loop.create_task(check_expired_premium(self))
-        self.loop.create_task(self._ping_loop())
-        app_runner = web.AppRunner(await web_server())
-        await app_runner.setup()
-        await web.TCPSite(app_runner, "0.0.0.0", PORT).start()
+        self.loop.create_task(self._ping())
+        runner = web.AppRunner(await web_server())
+        await runner.setup()
+        await web.TCPSite(runner, "0.0.0.0", PORT).start()
         tz = pytz.timezone("Asia/Kolkata")
         today = date.today()
         now = datetime.now(tz).strftime("%H:%M:%S %p")
-        restart_message = (
+        msg = (
             f"<b>{me.mention} ʀᴇsᴛᴀʀᴛᴇᴅ 🤖\n\n"
             f"📆 ᴅᴀᴛᴇ - <code>{today}</code>\n"
             f"🕙 ᴛɪᴍᴇ - <code>{now}</code>\n"
             f"🌍 ᴛɪᴍᴇ ᴢᴏɴᴇ - <code>Asia/Kolkata</code></b>"
         )
-        await self.send_message(chat_id=LOG_CHANNEL, text=restart_message)
-        await self.send_message(chat_id=SUPPORT_GROUP, text=f"<b>{me.mention} ʀᴇsᴛᴀʀᴛᴇᴅ 🤖</b>")
+        await self.send_message(LOG_CHANNEL, msg)
+        await self.send_message(SUPPORT_GROUP, f"<b>{me.mention} ʀᴇsᴛᴀʀᴛᴇᴅ 🤖</b>")
         elapsed = int(time.time() - self._start_time)
         for admin in ADMINS:
             await self.send_message(
-                chat_id=admin,
-                text=f"<b>✅ ʙᴏᴛ ʀᴇsᴛᴀʀᴛᴇᴅ\n🕥 ᴛɪᴍᴇ ᴛᴀᴋᴇɴ - <code>{elapsed} sᴇᴄᴏɴᴅs</code></b>",
+                admin,
+                f"<b>✅ ʙᴏᴛ ʀᴇsᴛᴀʀᴛᴇᴅ\n🕥 ᴛɪᴍᴇ ᴛᴀᴋᴇɴ - <code>{elapsed} sᴇᴄᴏɴᴅs</code></b>",
             )
 
     async def stop(self, *args):
         await super().stop()
-        print("Bot stopped.")
 
-    async def _ping_loop(self):
-        async with aiohttp.ClientSession() as session:
+    async def _ping(self):
+        async with aiohttp.ClientSession() as s:
             while True:
                 try:
-                    await session.get(PING_URL)
+                    await s.get(PING_URL)
                 except:
                     pass
                 await asyncio.sleep(30)
 
     async def is_admin(self, chat_id: Union[int, str], user_id: int) -> bool:
-        async for member in self.get_chat_members(chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS):
-            if member.user.id == user_id:
+        async for m in self.get_chat_members(chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS):
+            if m.user.id == user_id:
                 return True
         return False
 
@@ -100,14 +97,12 @@ class Bot(Client):
     ) -> Optional[AsyncGenerator["types.Message", None]]:
         current = offset
         while True:
-            new_diff = min(200, limit - current)
-            if new_diff <= 0:
+            batch = min(200, limit - current)
+            if batch <= 0:
                 return
-            messages = await self.get_messages(
-                chat_id, list(range(current, current + new_diff + 1))
-            )
-            for message in messages:
-                yield message
+            msgs = await self.get_messages(chat_id, list(range(current, current + batch + 1)))
+            for msg in msgs:
+                yield msg
                 current += 1
 
 app = Bot()
@@ -117,25 +112,20 @@ async def set_delay(c: Bot, m: types.Message):
     if not m.from_user or not await c.is_admin(m.chat.id, m.from_user.id):
         return
     try:
-        delay_sec = int(m.text.split()[1])
+        sec = int(m.text.split()[1])
     except:
         return await m.reply("Usage: /setdelay <seconds>")
-    await _settings_coll.update_one(
-        {"chat_id": m.chat.id},
-        {"$set": {"delay": delay_sec}},
-        upsert=True,
-    )
-    await m.reply(f"✅ Auto-delete delay set to {delay_sec} seconds.")
+    await _settings.update_one({"chat_id": m.chat.id}, {"$set": {"delay": sec}}, upsert=True)
+    await m.reply(f"✅ Auto-delete delay set to {sec} seconds.")
 
 @app.on_message(filters.group & ~filters.service)
 async def delete_later(c: Bot, m: types.Message):
     if not m.from_user or m.from_user.is_bot:
         return
-    setting = await _settings_coll.find_one({"chat_id": m.chat.id})
+    setting = await _settings.find_one({"chat_id": m.chat.id})
     if not setting or "delay" not in setting:
         return
-    delay = setting["delay"]
-    await asyncio.sleep(delay)
+    await asyncio.sleep(setting["delay"])
     try:
         await c.delete_messages(m.chat.id, m.id)
     except:
